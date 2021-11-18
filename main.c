@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
     printf("Lick my balls bitch\n");
-    return 0;
+    return EXIT_SUCCESS;
 }
