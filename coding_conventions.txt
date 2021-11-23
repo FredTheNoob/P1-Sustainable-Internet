@@ -1,3 +1,9 @@
 local variables & functions:  snake_case
 structs:                      PascalCase
 const & enum values:          CAPS
+
+Curly brackest:               Sameline
+e.g: 
+for(...){
+    
+}
