@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
-    printf("Hello, World!\n");
-    return 0;
+    printf("Lick my balls bitch\n");
+    printf("no u");
+    return EXIT_SUCCESS;
 }
