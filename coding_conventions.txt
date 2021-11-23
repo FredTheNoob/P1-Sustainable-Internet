@@ -4,6 +4,19 @@ const & enum values:          CAPS
 
 Curly brackest:               Sameline
 e.g: 
-for(...){
-    
+for (...) {
+    4 spaces
 }
+
+if (...) {
+    4 spaces
+}
+
+function(...) {
+    4 spaces
+}
+
+Comments
+/* ---- Large comment ---- */
+
+some code /* Line comment */
