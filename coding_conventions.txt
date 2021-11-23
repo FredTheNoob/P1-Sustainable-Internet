@@ -1,0 +1,3 @@
+local variables & functions: snake_case
+structs: PascalCase
+const & enum values: CAPS
