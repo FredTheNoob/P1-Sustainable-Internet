@@ -18,8 +18,6 @@
 
 /* ---- Structs ---- */
 
-
-
 int main(void){
 
 
