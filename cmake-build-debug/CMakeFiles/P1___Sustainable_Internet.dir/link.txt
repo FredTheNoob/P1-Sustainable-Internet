@@ -1,3 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2021.2.2\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\P1___Sustainable_Internet.dir/objects.a
-C:\Programs\MinGW-w64\mingw32\bin\ar.exe cr CMakeFiles\P1___Sustainable_Internet.dir/objects.a @CMakeFiles\P1___Sustainable_Internet.dir\objects1.rsp
-C:\Programs\MinGW-w64\mingw32\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\P1___Sustainable_Internet.dir/objects.a -Wl,--no-whole-archive -o P1___Sustainable_Internet.exe -Wl,--out-implib,libP1___Sustainable_Internet.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\P1___Sustainable_Internet.dir\linklibs.rsp
