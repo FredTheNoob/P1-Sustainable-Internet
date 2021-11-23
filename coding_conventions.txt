@@ -10,10 +10,10 @@
  */
 
 /* 
- *  Programmer: Lucas Martin Larsen     Date completed: November 1, 2021
- *  Instructor: Kurt Nørmark            Class: IMPR
- *  Group: 206B
- *  Estimates area under curve.
+ * Programmer: Lucas Martin Larsen     Date completed: November 1, 2021
+ * Instructor: Kurt Nørmark            Class: IMPR
+ * Group: 206B
+ * Estimates area under curve.
  */
 
 
