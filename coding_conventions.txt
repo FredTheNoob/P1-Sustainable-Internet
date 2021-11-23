@@ -1,13 +1,13 @@
 /*
-* Title: Palindromer
-* Description: 
-* Assignment: Opgave 11.2 
-* Link to assignment: http://people.cs.aau.dk/%7Enormark/impr-c/recursion-fib3-slide-exercise-2.html
-* 
-* Programmer: Sebastian Livoni Larsen
-* Date completed: November 5, 2021
-* Instructor: Kurt Nørmark * Class: AAL E21
-*/
+ * Title: Palindromer
+ * Description: 
+ * Assignment: Opgave 11.2 
+ * Link to assignment: http://people.cs.aau.dk/%7Enormark/impr-c/recursion-fib3-slide-exercise-2.html
+ * 
+ * Programmer: Sebastian Livoni Larsen
+ * Date completed: November 5, 2021
+ * Instructor: Kurt Nørmark * Class: AAL E21
+ */
 
 /* 
  *  Programmer: Lucas Martin Larsen     Date completed: November 1, 2021
