@@ -28,7 +28,7 @@
 *.so.*
 *.dylib
 
-*.sharedcommit
+sharedcommit.txt
 
 # Executables
 *.exe
