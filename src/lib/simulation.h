@@ -2,10 +2,11 @@
 #define SIMULATION
 
 struct SimulationInput {
+    unsigned short num_websites;
     unsigned short num_users;
     unsigned short avg_user_time;
     unsigned short time_increment;
-    unsigned int sim_duration;
+    unsigned int sim_duration;      
 };
 typedef struct SimulationInput SimulationInput;
 
