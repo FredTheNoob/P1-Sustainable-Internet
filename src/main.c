@@ -12,14 +12,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* ---- Defines ---- */
-
-/* ---- Enums ---- */
-
-/* ---- Structs ---- */
+#include "simulation.h"
 
 int main(void){
 
+    SimulationInput sim_input = {
+
+    };
+
+    run_simulation(&sim_input);
 
     return EXIT_SUCCESS;
 }
