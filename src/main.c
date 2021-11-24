@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "simulation.h"
+#include "lib/simulation.h"
 
 int main(void){
 
