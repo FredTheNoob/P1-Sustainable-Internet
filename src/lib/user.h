@@ -10,4 +10,8 @@ struct User {
 };
 typedef struct User User;
 
+void handle_website(User *user); /* Logic to conrol whether a user should be assigned a new website */
+
+void assign_website(User *user); /* Assign website to user */
+
 #endif

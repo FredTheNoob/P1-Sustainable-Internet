@@ -9,9 +9,11 @@ struct SimulationInput {
 };
 typedef struct SimulationInput SimulationInput;
 
+SimulationInput get_sim_input(void); /* Read the input file */
+
 void run_simulation(SimulationInput *sim_input);
 
-void print_simulation(...);
+void print_simulation();
 
 #endif
 

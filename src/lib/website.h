@@ -12,4 +12,3 @@ typedef struct Website Website;
 Website *get_website(Website *websites, unsigned short previous_website_id);
 
 #endif
-

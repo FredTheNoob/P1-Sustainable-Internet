@@ -18,9 +18,7 @@
 
 int main(void){
 
-    SimulationInput sim_input = {
-
-    };
+    SimulationInput sim_input = get_sim_input();
 
     run_simulation(&sim_input);
 
