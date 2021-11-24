@@ -7,7 +7,7 @@ Website *get_website(Website *websites, unsigned int websites_length, short prev
     /* Loop over websites */
     int curr_range = 0;
     for (int i = 0; i < websites_length; i++) {
-        if (roll > curr_range && roll <= websites[i].influence + curr_range
+        if (roll >= curr_range && roll <= websites[i].influence + curr_range
             && websites[i].id != previous_website_id) {
             return &websites[i];
         }   
