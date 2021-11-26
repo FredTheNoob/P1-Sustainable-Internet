@@ -2,6 +2,7 @@
 #define USER
 
 #include "website.h"
+#include "simulation.h"
 
 struct User {
     unsigned int current_time;
@@ -10,8 +11,10 @@ struct User {
 };
 typedef struct User User;
 
-void handle_website(User *user, Website *websites, unsigned short time_increment); /* Logic to conrol whether a user should be assigned a new website */
+void generate_users(User *users, SimulationInput *sim_input);
 
-void assign_website(User *user, Website *websites); /* Assign website to user */
+void handle_website(User *user, Website *websites, unsigned int num_websites, unsigned short time_increment); /* Logic to conrol whether a user should be assigned a new website */
+
+void assign_website(User *user, Website *websites, unsigned int num_websites); /* Assign website to user */
 
 #endif
