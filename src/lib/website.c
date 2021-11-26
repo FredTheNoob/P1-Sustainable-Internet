@@ -29,7 +29,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     char *file_addr = "input/websites_data.csv";
     FILE *file_pointer = fopen(file_addr, "r");
     char *line_buffer;
-    int i, j;
+    int i;
     
     /* Opens the input file to read it */
     
@@ -45,7 +45,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         
         if (i != -1) {
             websites[i].id = i;
-            sscanf(line_buffer, " %hu,%f,%f", websites[i].avg_duration, websites[i].pages_per_visit, websites[i].influence);        
+            sscanf(line_buffer, " %hu,%f,%f", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].influence);        
             /* ERROR WITH SSCANF IN GDB!!!
             Reading symbols from c:\Users\jonas\OneDrive - Aalborg Universitet\1. semester\P1-Sustainable-Internet\a.exe...done.
             (gdb) run
