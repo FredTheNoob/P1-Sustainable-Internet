@@ -27,7 +27,8 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     char *file_addr = "input/websites_data.csv";
     FILE *file_pointer = fopen(file_addr, "r");
     char line_buffer[MAX_LINE_LEN];
-    char *tokens = NULL;
+    char *token = NULL;
+    char *tokens[NUM_COLUMNS];
     int i = -1, j;
     
     /* Opens the input file to read it */
@@ -39,35 +40,26 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 
     /* Reads text until newline is encountered */
-    while (fscanf(file_pointer, "%s", line_buffer) && i < sim_input->num_websites) {
+    while (i < 12) {
+        int i1;
+        double d2, d3;
+        printf("%p\n", file_pointer);
+        fscanf(file_pointer, "%d,%lf,%lf", &i1, &d2, &d3);
+        printf("%d\n", i);
+        
         if (i != -1) {
-            /* Splitting the data into a series of tokens */
-            tokens = strtok(line_buffer, ",");
 
-            /* Assigning a unique ID for every website */
-            websites[i].id = i;
-
-            /*  */
-            for (j = 0; j < NUM_COLUMNS; j++) {
-                switch (j) {
-                    case 0: websites[i].avg_duration = atoi(&tokens[j]); break;
-                    case 1: websites[i].pages_per_visit = atof(&tokens[j]); break;
-                    case 2: websites[i].influence = atof(&tokens[j]); break;
-                    default: break;
-                }
-            }
+            
         }
         
         i++;
-        for (int x = 0; x < MAX_LINE_LEN; x++) {
-            printf("%c", line_buffer[x]);
-        }
-        for (int x = 0; x < MAX_LINE_LEN; x++) {
-            line_buffer[x] = '\0';
-        }
-        
-        printf("\n");
+   
     }
+    // for (j = 0; j < sim_input->num_websites; j++) {
+    //     printf("ID: %2d\tavg_dur: %4d\tpages_per_visit: %5.2lf\tinfluence: %.4lf\n",
+    //     websites[j].id, websites[j].avg_duration, websites[j].pages_per_visit, websites[j].influence
+    //     );
+    // }
     
     printf("I'm here now! :-D");
     

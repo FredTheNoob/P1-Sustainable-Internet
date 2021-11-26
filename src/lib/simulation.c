@@ -4,7 +4,7 @@
 
 SimulationInput get_sim_input() {
     /* Temporarily hard-coded input. In final version input should be read from a file */
-    SimulationInput sim_input = {50, 10, 3600, 10, 7200}; /* num_users, num_websites, avg_user_time, time_increment, sim_duration */
+    SimulationInput sim_input = {50, 50, 3600, 10, 7200}; /* num_users, num_websites, avg_user_time, time_increment, sim_duration */
 
     /* Returning simulation input */
     return sim_input;
