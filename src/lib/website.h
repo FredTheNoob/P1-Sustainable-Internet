@@ -12,6 +12,7 @@ struct Website {
 typedef struct Website Website;
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
+Website *get_website_v2(Website *websites, unsigned int num_websites, short previous_website_id);
 
 void load_websites(Website *websites, SimulationInput *sim_input);
 

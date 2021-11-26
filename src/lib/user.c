@@ -25,14 +25,13 @@ void assign_website(User *user, Website *websites, unsigned int num_websites) {
     int prev_website_id;
 
     if (user->current_website == NULL) {
-        printf("test\n");
         prev_website_id = -1;
     } else {
         prev_website_id = user->current_website->id;
     }
 
 
-    user->current_website = get_website(websites, num_websites, prev_website_id);
+    user->current_website = get_website_v2(websites, num_websites, prev_website_id);
 
     
 } 

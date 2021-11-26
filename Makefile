@@ -1,10 +1,12 @@
-make_file:
-	gcc -g -c src/lib/website.c
-	gcc -g -c src/lib/user.c
-	gcc -g -c src/lib/simulation.c
-	gcc -g -c src/main.c
+CFLAGS=-g -Wall
 
-	gcc -g main.o simulation.o website.o user.o
+make_file:
+	gcc $(CFLAGS) -c src/lib/website.c
+	gcc $(CFLAGS) -c src/lib/user.c
+	gcc $(CFLAGS) -c src/lib/simulation.c
+	gcc $(CFLAGS) -c src/main.c
+
+	gcc $(CFLAGS) main.o simulation.o website.o user.o
 
 	rm main.o
 	rm simulation.o
