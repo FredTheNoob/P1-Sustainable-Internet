@@ -20,7 +20,7 @@ void run_simulation (SimulationInput *sim_input) {
 
     /* Create arrays for users */
     User users[simulation_input.num_users];
-    generate_users(users, &simulation_input);
+    //generate_users(users, &simulation_input);
     
     /* Create function call for website list */
     Website websites[simulation_input.num_websites];

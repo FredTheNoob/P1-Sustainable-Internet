@@ -3,7 +3,7 @@
 #include <string.h>
 #include "website.h"
 
-#define MAX_LINE_LEN 100
+#define MAX_LINE_LEN 50
 #define NUM_COLUMNS 3
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id) {
@@ -39,7 +39,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 
     /* Reads text until newline is encountered */
-    while (fgets(line_buffer, MAX_LINE_LEN, file_pointer) && i < sim_input->num_websites) {
+    while (fscanf(file_pointer, "%s", line_buffer) && i < sim_input->num_websites) {
         if (i != -1) {
             /* Splitting the data into a series of tokens */
             tokens = strtok(line_buffer, ",");
@@ -60,8 +60,12 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         
         i++;
         for (int x = 0; x < MAX_LINE_LEN; x++) {
-            printf("%c ", line_buffer[x]);
+            printf("%c", line_buffer[x]);
         }
+        for (int x = 0; x < MAX_LINE_LEN; x++) {
+            line_buffer[x] = '\0';
+        }
+        
         printf("\n");
     }
     
