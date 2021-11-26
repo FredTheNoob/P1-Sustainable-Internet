@@ -22,5 +22,7 @@ int main(void){
 
     run_simulation(&sim_input);
 
+
+    printf("Reached end of program\n");
     return EXIT_SUCCESS;
 }
