@@ -1,7 +1,12 @@
+#include <stdio.h>
 #include "user.h"
 
 void generate_users(User *users, SimulationInput *sim_input) {
-
+    for (int i = 0; i < sim_input->num_users; i++) {
+        users[i].current_time = 0;
+        users[i].current_website = NULL;
+        users[i].max_daily_time = sim_input->avg_user_time;
+    }
 }
 
 /* Logic to conrol whether a user should be assigned a new website */
