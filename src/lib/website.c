@@ -28,10 +28,8 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
 void load_websites(Website *websites, SimulationInput *sim_input) {
     char *file_addr = "input/websites_data.csv";
     FILE *file_pointer = fopen(file_addr, "r");
-    char line_buffer[MAX_LINE_LEN];
-    char *token = NULL;
-    char *tokens[NUM_COLUMNS];
-    int i = -1, j;
+    char *line_buffer;
+    int i, j;
     
     /* Opens the input file to read it */
     
@@ -42,28 +40,27 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 
     /* Reads text until newline is encountered */
-    while (i < 12) {
-        int i1;
-        double d2, d3;
-        printf("%p\n", file_pointer);
-        fscanf(file_pointer, " %d,%lf,%lf ", &i1, &d2, &d3);
-        printf("%d\n", i);
+    for (i = -1; i < sim_input->num_websites; i++) {
+        fscanf(file_pointer, " %s", line_buffer);
         
         if (i != -1) {
+            websites[i].id = i;
+            sscanf(line_buffer, " %hu,%f,%f", websites[i].avg_duration, websites[i].pages_per_visit, websites[i].influence);        
+            /* ERROR WITH SSCANF IN GDB!!!
+            Reading symbols from c:\Users\jonas\OneDrive - Aalborg Universitet\1. semester\P1-Sustainable-Internet\a.exe...done.
+            (gdb) run
+            Starting program: c:\Users\jonas\OneDrive - Aalborg Universitet\1. semester\P1-Sustainable-Internet/a.exe
+            [New Thread 19528.0x3c18]
+            [New Thread 19528.0x4b8]
 
-            
+            Program received signal SIGSEGV, Segmentation fault.
+            0x76ab17da in ungetwc () from C:\WINDOWS\SysWOW64\msvcrt.dll
+            (gdb) bt
+            #0  0x76ab17da in ungetwc () from C:\WINDOWS\SysWOW64\msvcrt.dll
+            #1  0x00000001 in ?? ()
+            #2  0x00000000 in ?? ()*/
         }
-        
-        i++;
-   
     }
-    // for (j = 0; j < sim_input->num_websites; j++) {
-    //     printf("ID: %2d\tavg_dur: %4d\tpages_per_visit: %5.2lf\tinfluence: %.4lf\n",
-    //     websites[j].id, websites[j].avg_duration, websites[j].pages_per_visit, websites[j].influence
-    //     );
-    // }
-    
-    printf("I'm here now! :-D");
-    
+        
     fclose(file_pointer);
 }
