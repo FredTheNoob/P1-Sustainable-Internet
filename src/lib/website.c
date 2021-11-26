@@ -12,7 +12,7 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
 
     /* Loop over websites */
     int curr_range = 0;
-    for (int i = 0; i < num_websites; i++) {
+    for (unsigned int i = 0; i < num_websites; i++) {
         if (roll >= curr_range && roll <= websites[i].influence + curr_range
             && websites[i].id != previous_website_id) {
             return &websites[i];
@@ -21,6 +21,8 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
             curr_range += websites[i].influence;
         }
     }
+
+    return NULL;
 }
 
 void load_websites(Website *websites, SimulationInput *sim_input) {
@@ -44,7 +46,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         int i1;
         double d2, d3;
         printf("%p\n", file_pointer);
-        fscanf(file_pointer, "%d,%lf,%lf", &i1, &d2, &d3);
+        fscanf(file_pointer, " %d,%lf,%lf ", &i1, &d2, &d3);
         printf("%d\n", i);
         
         if (i != -1) {
