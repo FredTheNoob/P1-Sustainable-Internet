@@ -1,16 +1,80 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "simulation.h"
 #include "user.h"
 #include "website.h"
 
 SimulationInput get_sim_input() {
-    /* Temporarily hard-coded input. In final version input should be read from a file */
+    FILE *fp;
+    char key[SIM_INPUT_LENGTH];
 
-    /* num_users, num_websites, avg_user_time, time_increment, sim_duration */  
-    SimulationInput sim_input = {50, 50, 100, 200, 200}; 
+    /* Opens the input file in read mode (r) */
+    fp = fopen("../../input/simulation_input.txt", "r");
+    
+    if (fp == NULL) {
+        printf(ERROR_COLOR "%s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    int lines = get_lines_in_file(fp);
+    /* Move the pointer back to the start of the file as we need to iterate over it again */
+    rewind(fp); 
+
+    InputData *arr = (InputData*)malloc(lines * sizeof(InputData));
+    
+    if (arr == NULL) {
+        printf(ERROR_COLOR "%s: Failed to allocate space for InputData\n" DEFAULT_COLOR, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    int temp, i = 0;
+    while (!feof(fp)) {
+        fscanf(fp, "%s", key);
+        fscanf(fp, "%d", &temp);
+
+        strcpy(arr[i].key, key);
+        arr[i].val = temp;
+        i++;
+    }
+
+    fclose(fp);
+
+    SimulationInput sim_input;
+
+    /* 🤮 - Should probably use hash maps this looks like shit */
+    for (int j = 0; j < lines; j++)
+    {
+        if (check_key(arr[j].key, "NUM_USERS")) {
+            sim_input.num_users = arr[j].val;
+        }
+        else if (check_key(arr[j].key, "NUM_WEBSITES")) {
+            sim_input.num_websites = arr[j].val;
+        }
+        else if (check_key(arr[j].key, "AVG_USER_TIME")) {
+            sim_input.avg_user_time = arr[j].val;
+        }
+        else if (check_key(arr[j].key, "TIME_INCREMENT")) {
+            sim_input.time_increment = arr[j].val;
+        }
+        else if (check_key(arr[j].key, "SIM_DURATION")) {
+            sim_input.sim_duration = arr[j].val;
+        }
+        else {
+            printf(WARNING_COLOR "%s: Warning! Invalid parameter detected in simulation_input.txt on line %d (%s). This param will be ignored\n\n" DEFAULT_COLOR, __FILE__, j + 1, arr[j].key);
+        }
+    }
+
+    free(arr);
+
+    /*
+    print_sim_input(&sim_input);
+    */
+
+    /* We should maybe validate sim_input here with some function, if some members we're not set correctly (if val is not a number, etc) */
+
 
     /* Returning simulation input */
     return sim_input;
@@ -56,3 +120,28 @@ void print_simulation_output () {
     
 }
 
+int get_lines_in_file(FILE *fp) {
+    char c;
+    int lines = 1;
+
+    while (!feof(fp)) {
+        c = fgetc(fp);
+        if (c == '\n') {
+            lines++;
+        }
+    }
+
+    return lines;
+}
+
+int check_key(char *key, char *valid_key) {
+    return strcmp(key, valid_key) == 0;
+}
+
+void print_sim_input(SimulationInput *sim_input) {
+    printf("users: %d, websites: %d, user_time: %d, time_inc: %d, sim_dur: %d\n", sim_input->num_users, 
+    sim_input->num_websites, 
+    sim_input->avg_user_time,
+    sim_input->time_increment,
+    sim_input->sim_duration);
+}
