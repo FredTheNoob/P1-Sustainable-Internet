@@ -12,7 +12,7 @@ SimulationInput get_sim_input() {
     char key[SIM_INPUT_LENGTH];
 
     /* Opens the input file in read mode (r) */
-    fp = fopen("../../input/simulation_input.txt", "r");
+    fp = fopen("simulation_input.txt", "r");
     
     if (fp == NULL) {
         printf(ERROR_COLOR "%s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
@@ -23,52 +23,37 @@ SimulationInput get_sim_input() {
     /* Move the pointer back to the start of the file as we need to iterate over it again */
     rewind(fp); 
 
-    InputData *arr = (InputData*)malloc(lines * sizeof(InputData));
-    
-    if (arr == NULL) {
-        printf(ERROR_COLOR "%s: Failed to allocate space for InputData\n" DEFAULT_COLOR, __FILE__);
-        exit(EXIT_FAILURE);
-    }
+    SimulationInput sim_input;
 
     int temp, i = 0;
     while (!feof(fp)) {
         fscanf(fp, "%s", key);
         fscanf(fp, "%d", &temp);
 
-        strcpy(arr[i].key, key);
-        arr[i].val = temp;
+        if (check_key(key, "NUM_USERS")) {
+            sim_input.num_users = temp;
+        }
+        else if (check_key(key, "NUM_WEBSITES")) {
+            sim_input.num_websites = temp;
+        }
+        else if (check_key(key, "AVG_USER_TIME")) {
+            sim_input.avg_user_time = temp;
+        }
+        else if (check_key(key, "TIME_INCREMENT")) {
+            sim_input.time_increment = temp;
+        }
+        else if (check_key(key, "SIM_DURATION")) {
+            sim_input.sim_duration = temp;
+        }
+        else {
+            printf(WARNING_COLOR "%s: Warning! Invalid parameter detected in simulation_input.txt on line %d (%s). This param will be ignored\n\n" DEFAULT_COLOR, __FILE__, i + 1, key);
+        }
+
         i++;
     }
 
     fclose(fp);
-
-    SimulationInput sim_input;
-
-    /* 🤮 - Should probably use hash maps this looks like shit */
-    for (int j = 0; j < lines; j++)
-    {
-        if (check_key(arr[j].key, "NUM_USERS")) {
-            sim_input.num_users = arr[j].val;
-        }
-        else if (check_key(arr[j].key, "NUM_WEBSITES")) {
-            sim_input.num_websites = arr[j].val;
-        }
-        else if (check_key(arr[j].key, "AVG_USER_TIME")) {
-            sim_input.avg_user_time = arr[j].val;
-        }
-        else if (check_key(arr[j].key, "TIME_INCREMENT")) {
-            sim_input.time_increment = arr[j].val;
-        }
-        else if (check_key(arr[j].key, "SIM_DURATION")) {
-            sim_input.sim_duration = arr[j].val;
-        }
-        else {
-            printf(WARNING_COLOR "%s: Warning! Invalid parameter detected in simulation_input.txt on line %d (%s). This param will be ignored\n\n" DEFAULT_COLOR, __FILE__, j + 1, arr[j].key);
-        }
-    }
-
-    free(arr);
-
+    
     /*
     print_sim_input(&sim_input);
     */

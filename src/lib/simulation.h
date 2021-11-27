@@ -7,12 +7,6 @@
 #define DEFAULT_COLOR "\033[0m"
 #define WARNING_COLOR "\033[0;33m"
 
-struct InputData {
-    char key[SIM_INPUT_LENGTH];
-    int val;
-};
-typedef struct InputData InputData;
-
 struct SimulationInput {
     unsigned short num_websites;
     unsigned short num_users;
