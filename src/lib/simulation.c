@@ -9,44 +9,42 @@
 
 SimulationInput get_sim_input() {
     FILE *fp;
-    char key[SIM_INPUT_LENGTH];
+    SimulationInput sim_input;
+    char key[BUFFER_SIZE];
+    int value, i;
+    
 
     /* Opens the input file in read mode (r) */
     fp = fopen("input/simulation_input.txt", "r");
     
     if (fp == NULL) {
-        printf(ERROR_COLOR "[ERROR] %s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
+        printf("[ERROR] %s: Error opening simulation_input.txt\n", __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    // int lines = get_lines_in_file(fp);
-    /* Move the pointer back to the start of the file as we need to iterate over it again */
-    rewind(fp); 
-
-    SimulationInput sim_input;
-
-    int temp, i = 0;
+    /*  */
+    i = 0;
     while (!feof(fp)) {
         fscanf(fp, "%s", key);
-        fscanf(fp, "%d", &temp);
+        fscanf(fp, "%d", &value);
 
         if (check_key(key, "NUM_USERS")) {
-            sim_input.num_users = temp;
+            sim_input.num_users = value;
         }
         else if (check_key(key, "NUM_WEBSITES")) {
-            sim_input.num_websites = temp;
+            sim_input.num_websites = value;
         }
         else if (check_key(key, "AVG_USER_TIME")) {
-            sim_input.avg_user_time = temp;
+            sim_input.avg_user_time = value;
         }
         else if (check_key(key, "TIME_INCREMENT")) {
-            sim_input.time_increment = temp;
+            sim_input.time_increment = value;
         }
         else if (check_key(key, "SIM_DURATION")) {
-            sim_input.sim_duration = temp;
+            sim_input.sim_duration = value;
         }
         else {
-            printf(WARNING_COLOR "%s: Warning! Invalid parameter detected in simulation_input.txt on line %d (%s). This param will be ignored\n\n" DEFAULT_COLOR, __FILE__, i + 1, key);
+            printf("[WARNING] %s: Invalid parameter detected in simulation_input.txt on line %d (%s). This parameter will be ignored\n\n", __FILE__, i + 1, key);
         }
 
         i++;
@@ -104,24 +102,11 @@ void print_simulation_output () {
     
 }
 
-int get_lines_in_file(FILE *fp) {
-    char c;
-    int lines = 1;
-
-    while (!feof(fp)) {
-        c = fgetc(fp);
-        if (c == '\n') {
-            lines++;
-        }
-    }
-
-    return lines;
-}
-
 int check_key(char *key, char *valid_key) {
     return strcmp(key, valid_key) == 0;
 }
 
+/* Print for debugging */
 void print_sim_input(SimulationInput *sim_input) {
     printf("users: %d, websites: %d, user_time: %d, time_inc: %d, sim_dur: %d\n", sim_input->num_users, 
     sim_input->num_websites, 

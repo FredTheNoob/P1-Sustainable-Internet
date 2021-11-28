@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "user.h"
 
+/* Generate user data for the given number of users (from the simulation input file) */
 void generate_users(User *users, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_users; i++) {
         users[i].current_time = 0;
@@ -24,14 +25,13 @@ void handle_website(User *user, Website *websites, unsigned int num_websites, un
 void assign_website(User *user, Website *websites, unsigned int num_websites) {
     int prev_website_id;
 
+    /* Determine whether the user has a current website or not */
     if (user->current_website == NULL) {
         prev_website_id = -1;
     } else {
         prev_website_id = user->current_website->id;
     }
 
-
-    user->current_website = get_website_v2(websites, num_websites, prev_website_id);
-
-    
+    /* Gets a single website from the website data and assigns it to the given user's current website */
+    user->current_website = get_website(websites, num_websites, prev_website_id);
 } 

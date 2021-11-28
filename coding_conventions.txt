@@ -21,13 +21,19 @@ local variables & functions:  snake_case
 structs:                      PascalCase
 const & enum values:          CAPS
 
-Curly brackest:               Sameline
+Curly brackets:               Sameline
 e.g: 
 for (...) {
     4 spaces
 }
 
 if (...) {
+    4 spaces
+}
+else if (...) {
+    4 spaces
+}
+else {
     4 spaces
 }
 
