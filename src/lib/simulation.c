@@ -15,11 +15,11 @@ SimulationInput get_sim_input() {
     fp = fopen("input/simulation_input.txt", "r");
     
     if (fp == NULL) {
-        printf(ERROR_COLOR "%s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
+        printf(ERROR_COLOR "[ERROR] %s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    int lines = get_lines_in_file(fp);
+    // int lines = get_lines_in_file(fp);
     /* Move the pointer back to the start of the file as we need to iterate over it again */
     rewind(fp); 
 
@@ -81,7 +81,6 @@ void run_simulation(SimulationInput *simulation_input) {
     Website websites[simulation_input->num_websites];
     load_websites(websites, simulation_input);
 
-    
 
     /* check if users internet time has run out : false -> go fourth : true -> write to output file */
 

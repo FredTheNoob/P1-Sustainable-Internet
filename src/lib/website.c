@@ -23,8 +23,8 @@ Website *get_website_v2(Website *websites, unsigned int num_websites, short prev
     } else if (i == num_websites - 1) {
         return &websites[i - 1];
     } else {
-        printf("Failed to get website in website.c");
-        exit(1);
+        printf("[ERROR] Failed to get website in website.c");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -44,8 +44,8 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
         }
     }
 
-    printf("Failed to get website in website.c");
-    exit(1);
+    printf("[ERROR] Failed to get website in website.c");
+    exit(EXIT_FAILURE);
 }
 
 void load_websites(Website *websites, SimulationInput *sim_input) {
@@ -55,8 +55,8 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     int i;
     
     if (file_pointer == NULL) {
-        printf("ERROR: Can't open file\n");
-        exit(1);
+        printf(ERROR_COLOR "[ERROR] %s: Error opening websites_data.csv\n" DEFAULT_COLOR, __FILE__);
+        exit(EXIT_FAILURE);
     }
 
     /* Skip over first line of csv file */
@@ -76,10 +76,12 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     /* Check if the influences add up to 100 */
     double sum = 0;
     for (unsigned int i = 0; i < sim_input->num_websites; i++) {
+        printf("%lf\n", websites[i].influence);
         sum += websites[i].influence;
     }
+    printf("%lf\n", sum);
     if (sum < 0.999 || sum > 1.001) {
-        printf("Failed to load websites. Influences didn't add up to 100%%\n");
-        exit(1);
+        printf("[ERROR] Failed to load websites. Influences didn't add up to 100%%\n");
+        exit(EXIT_FAILURE);
     }
 }
