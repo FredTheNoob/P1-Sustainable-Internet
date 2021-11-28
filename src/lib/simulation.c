@@ -12,7 +12,7 @@ SimulationInput get_sim_input() {
     char key[SIM_INPUT_LENGTH];
 
     /* Opens the input file in read mode (r) */
-    fp = fopen("../../input/simulation_input.txt", "r");
+    fp = fopen("input/simulation_input.txt", "r");
     
     if (fp == NULL) {
         printf(ERROR_COLOR "%s: Error opening simulation_input.txt\n" DEFAULT_COLOR, __FILE__);
