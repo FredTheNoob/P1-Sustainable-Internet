@@ -3,6 +3,7 @@
     "stdio.h": "c",
     "website.h": "c",
     "simulation.h": "c",
-    "cstdlib": "c"
-  }
+    "cstdlib": "c",
+    "pthread.h": "c"
+}
 }

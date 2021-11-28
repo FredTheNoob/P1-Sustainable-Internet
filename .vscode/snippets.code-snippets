@@ -22,5 +22,16 @@
             "/* $1 */"
         ],
         "description": "Add a comment"
+    },
+
+    "If-statement":{
+        "scope": "c",
+        "prefix": "if",
+        "body": [
+            "if ($1) {",
+            "\t$2",
+            "}"
+        ],
+        "description": "If-statement"
     }
 }

@@ -12,7 +12,6 @@ SimulationInput get_sim_input() {
     SimulationInput sim_input;
     char key[BUFFER_SIZE];
     int value, i;
-    
 
     /* Opens the input file in read mode (r) */
     fp = fopen("input/simulation_input.txt", "r");
@@ -22,7 +21,7 @@ SimulationInput get_sim_input() {
         exit(EXIT_FAILURE);
     }
 
-    /*  */
+    /* While EOF has not been reached, load data into sim_imput */
     i = 0;
     while (!feof(fp)) {
         fscanf(fp, "%s", key);
@@ -40,8 +39,8 @@ SimulationInput get_sim_input() {
         else if (check_key(key, "TIME_INCREMENT")) {
             sim_input.time_increment = value;
         }
-        else if (check_key(key, "SIM_DURATION")) {
-            sim_input.sim_duration = value;
+        else if (check_key(key, "SIM_DURATION_DAYS")) {
+            sim_input.sim_duration_days = value;
         }
         else {
             printf("[WARNING] %s: Invalid parameter detected in simulation_input.txt on line %d (%s). This parameter will be ignored\n\n", __FILE__, i + 1, key);
@@ -51,12 +50,6 @@ SimulationInput get_sim_input() {
     }
 
     fclose(fp);
-    
-    /*
-    print_sim_input(&sim_input);
-    */
-
-    /* We should maybe validate sim_input here with some function, if some members we're not set correctly (if val is not a number, etc) */
 
 
     /* Returning simulation input */
@@ -65,7 +58,7 @@ SimulationInput get_sim_input() {
 
 
 void run_simulation(SimulationInput *simulation_input) {
-    unsigned int sim_time = 0;
+    unsigned int sim_time = 0, sim_days = 0;
     unsigned short user_index;
 
     srand(time(NULL));
@@ -74,24 +67,46 @@ void run_simulation(SimulationInput *simulation_input) {
     User users[simulation_input->num_users];
     generate_users(users, simulation_input);
 
-    
+
     /* Create function call for website list */
     Website websites[simulation_input->num_websites];
     load_websites(websites, simulation_input);
 
 
-    /* check if users internet time has run out : false -> go fourth : true -> write to output file */
+    /* Main loop - keeps looping until sim_time reaches sim_duration */
+    while(sim_days < simulation_input->sim_duration_days) {
 
-    while(sim_time < simulation_input->sim_duration){
+        int num_active_users = simulation_input->num_users;
 
-        /* loop through all users and call handle website function */
-        for (user_index = 0; user_index < simulation_input->num_users; user_index++){
-            handle_website(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
+        while (num_active_users > 0) {
+            
+            /* Checks if each user has reached their max_daily_time */
+            for (int i = 0; i < simulation_input->num_users; i++) {
+                if (users[i].has_reached_max_daily_time) {
+                    num_active_users--;
+                }
+            }
+
+            /* loop through all users and call handle website function */
+            for (user_index = 0; user_index < simulation_input->num_users; user_index++){
+                handle_website(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
+            }
+
+            /* Increment simulation time */
+            sim_time += simulation_input->time_increment;
         }
 
-        /* Incriment time and go back up to time check for loop */
-        sim_time += simulation_input->time_increment;
+        /* Resets all user's max_daily_time status */
+        reset_users(users, simulation_input->num_users);
+
+        sim_days++;
     }
+
+    float all_clicks = 0.0;
+    for (int i = 0; i < simulation_input->num_users; i++) {
+        all_clicks += users[i].total_clicks;
+    }
+    printf("%lf\n", all_clicks);
 
     /* Figure out output for function */
 
@@ -102,6 +117,7 @@ void print_simulation_output () {
     
 }
 
+/* Check if a key is valid */
 int check_key(char *key, char *valid_key) {
     return strcmp(key, valid_key) == 0;
 }
@@ -112,5 +128,5 @@ void print_sim_input(SimulationInput *sim_input) {
     sim_input->num_websites, 
     sim_input->avg_user_time,
     sim_input->time_increment,
-    sim_input->sim_duration);
+    sim_input->sim_duration_days);
 }
