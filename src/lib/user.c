@@ -5,7 +5,7 @@ void generate_users(User *users, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_users; i++) {
         users[i].current_time = 0;
         users[i].total_daily_time = 0;
-        users[i].max_daily_time = sim_input->avg_user_time;
+        users[i].max_daily_time = sim_input->avg_user_time; /* ----- generate "random" avg_user_time ----- */
         users[i].has_reached_max_daily_time = false;
         users[i].total_clicks = 0;
         users[i].current_website = NULL;
@@ -23,7 +23,7 @@ void reset_users(User *users, unsigned short num_users) {
 
 /* Logic to conrol whether a user should be assigned a new website */
 void handle_website(User *user, Website *websites, unsigned short num_websites, unsigned short time_increment) { 
-
+    /* ---------------- Fix current_time ---------------- */
     if (user->current_time == 0) {
         assign_website(user, websites, num_websites);
         user->current_time += time_increment;

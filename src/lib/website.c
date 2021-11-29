@@ -23,7 +23,7 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
     else if (i != num_websites - 1) { 
         return &websites[i + 1];
     }
-    /* If i is the last index */
+    /* If i is the last index (very unlikely) */
     else if (i == num_websites - 1) { 
         return &websites[i - 1];
     } 
