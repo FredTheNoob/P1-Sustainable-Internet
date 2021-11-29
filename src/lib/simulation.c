@@ -108,8 +108,13 @@ void run_simulation(SimulationInput *simulation_input) {
     /* print_simulation_output(); */
 }
 
-void print_simulation_output() {
-    
+void print_simulation_output(User *user, SimulationInput *simulation_input) {
+    /*
+    for (int i = 0; i < simulation_input->num_users; i++) {
+        printf("Clicks for user[%d]: %lf\n", i, users[i].total_clicks);
+    }
+    */
+
 }
 
 /* Check if a key is valid */
