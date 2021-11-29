@@ -55,7 +55,12 @@ SimulationInput get_sim_input() {
     return sim_input;
 }
 
-void run_simulation(SimulationInput *simulation_input) {
+SimulationOutput get_sim_output(SimulationOutput *sim_output){
+
+    sim_output->total_clicks = 0;
+}
+
+SimulationOutput run_simulation(SimulationInput *simulation_input) {
     unsigned int sim_days;
     unsigned short user_index;
 

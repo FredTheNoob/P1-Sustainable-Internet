@@ -19,8 +19,9 @@
 int main(void) {
 
     SimulationInput sim_input = get_sim_input();
+    SimulationOutput sim_output;
 
-    run_simulation(&sim_input);
+    sim_output = run_simulation(&sim_input);
 
     printf("Reached end of program\n");
 

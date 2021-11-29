@@ -10,11 +10,17 @@ struct SimulationInput {
 };
 typedef struct SimulationInput SimulationInput;
 
+struct SimulationOutput {
+    unsigned int total_pages;
+
+};
+typedef struct SimulationOutput SimulationOutput;
+
 int check_key(char *key, char *valid_key);
 void print_sim_input(SimulationInput *sim_input);
 SimulationInput get_sim_input(void); /* Read the input file */
 
-void run_simulation(SimulationInput *sim_input);
+SimulationOutput run_simulation(SimulationInput *sim_input);
 
 void print_simulation_output();
 
