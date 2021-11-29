@@ -104,9 +104,10 @@ void run_simulation(SimulationInput *simulation_input) {
 
     float all_clicks = 0.0;
     for (int i = 0; i < simulation_input->num_users; i++) {
+        printf("Clicks for user[%d]: %lf\n", i, users[i].total_clicks);
         all_clicks += users[i].total_clicks;
     }
-    printf("%lf\n", all_clicks);
+    printf("\nTotal clicks for all users: %.0f clicks\n", all_clicks);
 
     /* Figure out output for function */
 
