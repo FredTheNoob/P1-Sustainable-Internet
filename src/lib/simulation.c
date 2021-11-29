@@ -56,7 +56,7 @@ SimulationInput get_sim_input() {
 }
 
 void run_simulation(SimulationInput *simulation_input) {
-    unsigned int sim_days = 0;
+    unsigned int sim_days;
     unsigned short user_index;
 
     srand(time(NULL));
@@ -71,29 +71,15 @@ void run_simulation(SimulationInput *simulation_input) {
 
 
     /* Main loop - keeps looping until sim_days reaches sim_duration_days */
-    while (sim_days < simulation_input->sim_duration_days) {
+    for (sim_days = 0; sim_days < simulation_input->sim_duration_days; sim_days++) {
 
-        int num_active_users = simulation_input->num_users;
-
-        while (num_active_users > 0) {
-            
-            /* Checks if each user has reached their max_daily_time */
-            for (int i = 0; i < simulation_input->num_users; i++) {
-                if (users[i].has_reached_max_daily_time) {
-                    num_active_users--;
-                }
-            }
-
-            /* loop through all users and call handle website function */
-            for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-                handle_website(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
-            }
+        /* loop through all users and call handle website function */
+        for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
+            handle_user(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
         }
 
         /* Resets all user's max_daily_time status */
         reset_users(users, simulation_input->num_users);
-
-        sim_days++;
     }
 
     float all_clicks = 0.0;
