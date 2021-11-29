@@ -54,7 +54,7 @@ SimulationInput get_sim_input() {
 
 SimulationOutput get_sim_output(SimulationOutput *sim_output){
 
-    sim_output->total_clicks = 0;
+    sim_output->total_pages = 0;
 }
 
 SimulationOutput run_simulation(SimulationInput *simulation_input) {
