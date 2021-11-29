@@ -51,30 +51,27 @@ SimulationInput get_sim_input() {
 
     fclose(fp);
 
-
     /* Returning simulation input */
     return sim_input;
 }
 
-
 void run_simulation(SimulationInput *simulation_input) {
-    unsigned int sim_time = 0, sim_days = 0;
+    unsigned int sim_days = 0;
     unsigned short user_index;
 
     srand(time(NULL));
 
-    /* Create arrays for users */
+    /* Create array of users */
     User users[simulation_input->num_users];
     generate_users(users, simulation_input);
 
-
-    /* Create function call for website list */
+    /* Create array of websites */
     Website websites[simulation_input->num_websites];
     load_websites(websites, simulation_input);
 
 
-    /* Main loop - keeps looping until sim_time reaches sim_duration */
-    while(sim_days < simulation_input->sim_duration_days) {
+    /* Main loop - keeps looping until sim_days reaches sim_duration_days */
+    while (sim_days < simulation_input->sim_duration_days) {
 
         int num_active_users = simulation_input->num_users;
 
@@ -88,12 +85,9 @@ void run_simulation(SimulationInput *simulation_input) {
             }
 
             /* loop through all users and call handle website function */
-            for (user_index = 0; user_index < simulation_input->num_users; user_index++){
+            for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
                 handle_website(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
             }
-
-            /* Increment simulation time */
-            sim_time += simulation_input->time_increment;
         }
 
         /* Resets all user's max_daily_time status */
@@ -114,7 +108,7 @@ void run_simulation(SimulationInput *simulation_input) {
     /* print_simulation_output(); */
 }
 
-void print_simulation_output () {
+void print_simulation_output() {
     
 }
 
