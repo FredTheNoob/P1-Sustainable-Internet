@@ -3,26 +3,22 @@
 /* Generate user data for the given number of users (from the simulation input file) */
 void generate_users(User *users, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_users; i++) {
-        users[i].current_time = 0;
         users[i].total_daily_time = 0;
         users[i].max_daily_time = sim_input->avg_user_time; /* ----- generate "random" avg_user_time ----- */
-        users[i].has_reached_max_daily_time = false;
-        users[i].total_clicks = 0;
+        users[i].total_pages = 0;
         users[i].current_website = NULL;
     }
 }
 
 void reset_users(User *users, unsigned short num_users) {
     for (int i = 0; i < num_users; i++) {
-        users[i].has_reached_max_daily_time = false;
         users[i].total_daily_time = 0;
-        users[i].current_time = 0;
         users[i].current_website = NULL;
     }
 }
 
 /* Logic to conrol whether a user should be assigned a new website */
-void handle_website(User *user, Website *websites, unsigned short num_websites, unsigned short time_increment) { 
+void handle_user(User *user, Website *websites, unsigned short num_websites) { 
     /* ---------------- Fix current_time ---------------- */
     // if (user->current_time == 0) {
     //     assign_website(user, websites, num_websites);
@@ -39,7 +35,7 @@ void handle_website(User *user, Website *websites, unsigned short num_websites, 
     //     user->current_time = 0;
         
     //     /* Add the current website's avg pages per visit to the the user's total clicks */
-    //     user->total_clicks += user->current_website->pages_per_visit;
+    //     user->total_pages += user->current_website->pages_per_visit;
     // }
 
 
@@ -48,15 +44,21 @@ void handle_website(User *user, Website *websites, unsigned short num_websites, 
 
     /* If user's daily time + their current website's avg duration doesn't exceed their max daily time */
     while (user->total_daily_time + user->current_website->avg_duration < user->max_daily_time) {
+
         user->total_daily_time += user->current_website->avg_duration;
-        user->total_clicks += user->current_website->pages_per_visit;
+
+        user->total_pages += user->current_website->pages_per_visit;
+
         assign_website(user, websites, num_websites);
     }
 
     
+    /* Calculates the remaining pages */
+    float remaining_pages = (float)(user->max_daily_time - user->total_daily_time) / 
+                            (float)(user->current_website->avg_duration * 
+                            user->current_website->pages_per_visit); 
 
-
-
+    user->total_pages += remaining_pages;
 }
 
 /* Assign website to user */

@@ -36,9 +36,6 @@ SimulationInput get_sim_input() {
         else if (check_key(key, "AVG_USER_TIME")) {
             sim_input.avg_user_time = value;
         }
-        else if (check_key(key, "TIME_INCREMENT")) {
-            sim_input.time_increment = value;
-        }
         else if (check_key(key, "SIM_DURATION_DAYS")) {
             sim_input.sim_duration_days = value;
         }
@@ -75,8 +72,10 @@ void run_simulation(SimulationInput *simulation_input) {
 
         /* loop through all users and call handle website function */
         for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-            handle_user(&users[user_index], websites, simulation_input->num_websites, simulation_input->time_increment);
+            handle_user(&users[user_index], websites, simulation_input->num_websites);
         }
+
+        /* Handle output before resetting users */
 
         /* Resets all user's max_daily_time status */
         reset_users(users, simulation_input->num_users);
@@ -84,10 +83,10 @@ void run_simulation(SimulationInput *simulation_input) {
 
     float all_clicks = 0.0;
     for (int i = 0; i < simulation_input->num_users; i++) {
-        printf("Clicks for user[%d]: %lf\n", i, users[i].total_clicks);
-        all_clicks += users[i].total_clicks;
+        // printf("Clicks for user[%d]: %lf\n", i, users[i].total_pages);
+        all_clicks += users[i].total_pages;
     }
-    printf("\nTotal clicks for all users: %lf clicks\n", all_clicks);
+    // printf("\nTotal clicks for all users: %lf clicks\n", all_clicks);
 
     /* Figure out output for function */
 
@@ -105,9 +104,8 @@ int check_key(char *key, char *valid_key) {
 
 /* Print for debugging */
 void print_sim_input(SimulationInput *sim_input) {
-    printf("users: %d, websites: %d, user_time: %d, time_inc: %d, sim_dur: %d\n", sim_input->num_users, 
+    printf("users: %d, websites: %d, user_time: %d, sim_dur: %d\n", sim_input->num_users, 
     sim_input->num_websites, 
     sim_input->avg_user_time,
-    sim_input->time_increment,
     sim_input->sim_duration_days);
 }
