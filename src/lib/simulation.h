@@ -10,7 +10,7 @@ struct SimulationInput {
 typedef struct SimulationInput SimulationInput;
 
 struct SimulationOutput {
-    unsigned int total_pages;
+    float total_pages;
 
 };
 typedef struct SimulationOutput SimulationOutput;
@@ -24,6 +24,3 @@ SimulationOutput run_simulation(SimulationInput *sim_input);
 void print_simulation_output();
 
 #endif
-
-
-

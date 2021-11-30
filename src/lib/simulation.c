@@ -52,12 +52,8 @@ SimulationInput get_sim_input() {
     return sim_input;
 }
 
-SimulationOutput get_sim_output(SimulationOutput *sim_output){
-
-    sim_output->total_pages = 0;
-}
-
 SimulationOutput run_simulation(SimulationInput *simulation_input) {
+    SimulationOutput simulation_output;
     unsigned int sim_days;
     unsigned short user_index;
 
@@ -86,16 +82,16 @@ SimulationOutput run_simulation(SimulationInput *simulation_input) {
         reset_users(users, simulation_input->num_users);
     }
 
-    float all_clicks = 0.0;
+    simulation_output.total_pages = 0;
     for (int i = 0; i < simulation_input->num_users; i++) {
-        // printf("Clicks for user[%d]: %lf\n", i, users[i].total_pages);
-        all_clicks += users[i].total_pages;
+        simulation_output.total_pages += users[i].total_pages;
     }
-    // printf("\nTotal clicks for all users: %lf clicks\n", all_clicks);
 
     /* Figure out output for function */
 
     /* print_simulation_output(); */
+
+    return simulation_output;
 }
 
 void print_simulation_output(User *user, SimulationInput *simulation_input) {
