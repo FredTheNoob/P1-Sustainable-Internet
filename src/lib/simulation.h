@@ -21,6 +21,6 @@ SimulationInput get_sim_input(void); /* Read the input file */
 
 SimulationOutput run_simulation(SimulationInput *sim_input);
 
-void print_simulation_output();
+void print_simulation_output(*sim_output);
 
 #endif

@@ -94,15 +94,16 @@ SimulationOutput run_simulation(SimulationInput *simulation_input) {
     return simulation_output;
 }
 
-void print_simulation_output(User *user, SimulationInput *simulation_input) {
+void print_simulation_output(SimulationOutput *sim_output) {
     
     /* Print smt about the simulation - Parameters */
 
-    /*
-    for (int i = 0; i < simulation_input->num_users; i++) {
-        printf("Clicks for user[%d]: %lf\n", i, users[i].total_clicks);
-    }
-    */
+    printf("%f\n", sim_output->total_pages); 
+
+    /* Eventually print what websites were accessed the most? - So in terms of clicks */
+    /* Categorys for websites */
+    /* Score based on how long the user spends on a website and how many clicks are used */
+    /* Traceroute for users and what websites they accessed */
 
 }
 
