@@ -6,13 +6,13 @@
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
-    double propabilities_sum = websites[0].influence;
+    double propabilities_sum = 0;
     int i = 0;
 
     /* Iterates through websites until the sum exceeds the random number */
-    while (propabilities_sum < rand_0_1) {
-        i++;
+    while (propabilities_sum < rand_0_1 && i < num_websites - 1) {
         propabilities_sum += websites[i].influence;
+        i++;
     }
 
     /* If i is not the previous id */
