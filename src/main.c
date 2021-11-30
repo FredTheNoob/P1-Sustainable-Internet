@@ -23,7 +23,7 @@ int main(void) {
 
     sim_output = run_simulation(&sim_input);
 
-    printf("%lf\n", sim_output.total_pages);
+    printf("SimOutoput (total_pages): %lf\n", sim_output.total_pages);
 
     printf("Reached end of program\n");
 
