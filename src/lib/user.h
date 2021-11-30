@@ -1,9 +1,6 @@
 #ifndef USER
 #define USER
 
-#include <stdio.h>
-#include <stdbool.h>
-
 #include "website.h"
 #include "simulation.h"
 

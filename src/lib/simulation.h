@@ -1,6 +1,11 @@
 #ifndef SIMULATION
 #define SIMULATION
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
 struct SimulationInput {
     unsigned short num_websites;
     unsigned short num_users;

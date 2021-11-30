@@ -4,6 +4,7 @@
     "website.h": "c",
     "simulation.h": "c",
     "cstdlib": "c",
-    "pthread.h": "c"
-}
+    "pthread.h": "c",
+    "stdlib.h": "c"
+  }
 }

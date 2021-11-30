@@ -11,9 +11,6 @@
  *      ....
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "lib/simulation.h"
 
 int main(void) {

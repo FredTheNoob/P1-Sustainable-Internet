@@ -1,6 +1,8 @@
 #ifndef WEBSITE
 #define WEBSITE
 
+#include <string.h>
+
 #include "simulation.h"
 
 #define BUFFER_SIZE 50

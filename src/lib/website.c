@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "website.h"
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id) {
