@@ -11,7 +11,6 @@ typedef struct SimulationInput SimulationInput;
 
 struct SimulationOutput {
     float total_pages;
-
 };
 typedef struct SimulationOutput SimulationOutput;
 
