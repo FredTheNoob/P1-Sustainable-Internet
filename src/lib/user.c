@@ -19,26 +19,7 @@ void reset_users(User *users, unsigned short num_users) {
 
 /* Logic to conrol whether a user should be assigned a new website */
 void handle_user(User *user, Website *websites, unsigned short num_websites) { 
-    /* ---------------- Fix current_time ---------------- */
-    // if (user->current_time == 0) {
-    //     assign_website(user, websites, num_websites);
-    //     user->current_time += time_increment;
-    // }
-    // else if (user->current_time < user->current_website->avg_duration) {
-    //     user->current_time += time_increment;
-    // }
-    // else if (user->total_daily_time >= user->max_daily_time) {
-    //     user->has_reached_max_daily_time = true;
-    // }
-    // else {
-    //     user->total_daily_time += user->current_time;
-    //     user->current_time = 0;
-        
-    //     /* Add the current website's avg pages per visit to the the user's total clicks */
-    //     user->total_pages += user->current_website->pages_per_visit;
-    // }
-
-
+    
     /* Assign first website to user */
     assign_website(user, websites, num_websites);
 
@@ -51,7 +32,6 @@ void handle_user(User *user, Website *websites, unsigned short num_websites) {
 
         assign_website(user, websites, num_websites);
     }
-
     
     /* Calculates the remaining pages */
     float remaining_pages = (float)(user->max_daily_time - user->total_daily_time) / 
