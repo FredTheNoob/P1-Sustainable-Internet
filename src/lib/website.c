@@ -61,7 +61,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         sum += websites[i].influence;
     }
     if (sum < 0.999 || sum > 1.001) {
-        printf("[ERROR] Failed to load websites. Influences didn't add up to 100%%\n");
+        printf("[ERROR] Failed to load websites. Influences(=%lf) didn't add up to 1.0 (100%%)\n", sum);
         exit(EXIT_FAILURE);
     }
 }

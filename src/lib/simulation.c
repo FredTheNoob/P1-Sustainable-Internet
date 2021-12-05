@@ -1,6 +1,5 @@
 #include "simulation.h"
-#include "user.h"
-#include "website.h"
+
 
 SimulationInput get_sim_input() {
     FILE *fp;
@@ -34,6 +33,9 @@ SimulationInput get_sim_input() {
         else if (check_key(key, "SIM_DURATION_DAYS")) {
             sim_input.sim_duration_days = value;
         }
+        else if (check_key(key, "NUM_SIMULATIONS")) {
+            sim_input.num_simulations = value;
+        }
         else {
             printf("[WARNING] %s: Invalid parameter detected in simulation_input.txt on line %d (%s). This parameter will be ignored\n\n", __FILE__, i + 1, key);
         }
@@ -49,10 +51,7 @@ SimulationInput get_sim_input() {
 
 SimulationOutput run_simulation(SimulationInput *simulation_input) {
     SimulationOutput simulation_output;
-    unsigned int sim_days;
-    unsigned short user_index;
-
-    srand(time(NULL));
+    unsigned short sim_days, user_index;
 
     /* Create array of users */
     User users[simulation_input->num_users];
@@ -61,6 +60,10 @@ SimulationOutput run_simulation(SimulationInput *simulation_input) {
     /* Create array of websites */
     Website websites[simulation_input->num_websites];
     load_websites(websites, simulation_input);
+
+
+    /* Vary input parameters */
+    vary_input_parameter(simulation_input, websites, "PAGES_PER_VISIT", 0.8);
 
 
     /* Main loop - keeps looping until sim_days reaches sim_duration_days */
@@ -73,27 +76,36 @@ SimulationOutput run_simulation(SimulationInput *simulation_input) {
 
         /* Handle output before resetting users */
 
-        /* Resets all user's max_daily_time status */
+        /* Resets all users */
         reset_users(users, simulation_input->num_users);
     }
 
+    /* Calculate total number of pages downloaded */
     simulation_output.total_pages = 0;
     for (int i = 0; i < simulation_input->num_users; i++) {
         simulation_output.total_pages += users[i].total_pages;
     }
 
-    /* Figure out output for function */
-
-    /* print_simulation_output(); */
 
     return simulation_output;
 }
 
-void print_simulation_output(SimulationOutput *sim_output) {
+void vary_input_parameter(SimulationInput *sim_input, Website *websites, char *parameter, int multiplier) {
+    if (strcmp(parameter, "PAGES_PER_VISIT") == 0) {
+        for (int i = 0; i < sim_input->num_websites; i++) {
+            websites[i].pages_per_visit *= multiplier;
+        }
+    }
+}
+
+void print_simulation_output(SimulationOutput *sim_outputs, unsigned short num_simulations) {
     
     /* Print smt about the simulation - Parameters */
 
-    printf("%f\n", sim_output->total_pages); 
+    for (int i = 0; i < num_simulations; i++) {
+        printf("%f\n", sim_outputs[i].total_pages); 
+    }
+
 
     /* Eventually print what websites were accessed the most? - So in terms of clicks */
     /* Categorys for websites */

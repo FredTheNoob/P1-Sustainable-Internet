@@ -1,8 +1,8 @@
 #ifndef USER
 #define USER
 
-#include "website.h"
 #include "simulation.h"
+#include "website.h"
 
 struct User {
     unsigned int total_daily_time;
