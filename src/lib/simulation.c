@@ -1,5 +1,5 @@
 #include "simulation.h"
-
+#include "user.h"
 
 SimulationInput get_sim_input() {
     FILE *fp;
@@ -90,7 +90,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input) {
     return simulation_output;
 }
 
-void vary_input_parameter(SimulationInput *sim_input, Website *websites, char *parameter, int multiplier) {
+void vary_input_parameter(SimulationInput *sim_input, Website *websites, char *parameter, float multiplier) {
     if (strcmp(parameter, "PAGES_PER_VISIT") == 0) {
         for (int i = 0; i < sim_input->num_websites; i++) {
             websites[i].pages_per_visit *= multiplier;

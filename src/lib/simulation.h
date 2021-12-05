@@ -6,8 +6,7 @@
 #include <time.h>
 #include <string.h>
 
-#include "user.h"
-#include "website.h"
+typedef struct Website Website;
 
 struct SimulationInput {
     unsigned short num_websites;
@@ -29,7 +28,7 @@ SimulationInput get_sim_input(void); /* Read the input file */
 
 SimulationOutput run_simulation(SimulationInput *sim_input);
 
-void vary_input_parameter(SimulationInput *sim_input, Website *website, char *parameter, int multiplier);
+void vary_input_parameter(SimulationInput *sim_input, Website *website, char *parameter, float multiplier);
 
 void print_simulation_output(SimulationOutput *sim_output, unsigned short num_simulations);
 

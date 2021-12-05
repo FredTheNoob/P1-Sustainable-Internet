@@ -1,7 +1,6 @@
 #ifndef USER
 #define USER
 
-#include "simulation.h"
 #include "website.h"
 
 struct User {

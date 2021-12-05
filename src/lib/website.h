@@ -2,6 +2,8 @@
 #define WEBSITE
 
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "simulation.h"
 
@@ -14,6 +16,7 @@ struct Website {
     float influence;
 };
 typedef struct Website Website;
+
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
 
