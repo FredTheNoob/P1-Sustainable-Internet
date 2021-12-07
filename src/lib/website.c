@@ -33,7 +33,7 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
 
 void load_websites(Website *websites, SimulationInput *sim_input) {
     FILE *fp = fopen("input/websites_data.csv", "r");
-    char line_buffer[BUFFER_SIZE];
+    char category_buffer[BUFFER_SIZE];
     int i;
     
     if (fp == NULL) {
@@ -42,14 +42,21 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 
     /* Skip over first line of csv file */
-    fscanf(fp, " %s", line_buffer);
+    while (fgetc(fp) != '\n');
     
     /* Read file line by line */
     for (i = 0; i < sim_input->num_websites; i++) {
-        fscanf(fp, " %s", line_buffer);
         
         websites[i].id = i;
-        sscanf(line_buffer, " %hu,%f,%f", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].influence);
+        fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].influence, category_buffer);
+    
+        websites[i].category = get_category(category_buffer);
+    }
+
+    /* Print websites */
+    for (i = 0; i < sim_input->num_websites; i++) {
+
+        printf("%2d   %lf   %d\n", websites[i].id, websites[i].influence, websites[i].category);
     }
     
     /* Close file */
@@ -64,4 +71,34 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         printf("[ERROR] Failed to load websites. Influences(=%lf) didn't add up to 1.0 (100%%)\n", sum);
         exit(EXIT_FAILURE);
     }
+}
+
+/* Function that returns the corresponding enum */
+website_category get_category(char *category) {
+
+    char* categories[] = {
+        "Adult",
+        "Arts and Entertainment",
+        "Computer Technology",
+        "Consumer Electronics",
+        "E commerce",
+        "Email",
+        "Encyclopedias",
+        "Games",
+        "News and Media",
+        "Programming and Developer Software",
+        "Search Engines",
+        "Social Networks and Online Communities",
+        "Sports",
+        "Telecommunications",
+        "Video Streaming",
+        "Weather",
+    };
+
+    for (int i = ADULT; i <= WEATHER; i++) {
+        if (strcmp(category, categories[i]) == 0) return i;
+    }
+
+    printf("Category not recognized while loading websites\n"); 
+    exit(EXIT_FAILURE);
 }
