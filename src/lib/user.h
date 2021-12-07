@@ -21,7 +21,7 @@ void handle_user(User *user, Website *websites, unsigned short num_websites); /*
 
 void assign_website(User *user, Website *websites, unsigned short num_websites); /* Assign website to user */
 
-Website *recommend_website(WebsiteNode *linked_websites, short num_categories);
+Website *recommend_website(WebsiteNode *linked_websites, Website *current_website, short num_categories);
 
 bool choose_website(User *user, Website *recommended_website, float sustainable_choice);
 

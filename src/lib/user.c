@@ -56,3 +56,13 @@ void assign_website(User *user, Website *websites, unsigned short num_websites) 
     /* Gets a single website from the website data and assigns it to the given user's current website */
     user->current_website = get_website(websites, num_websites, prev_website_id);
 } 
+
+Website *recommend_website(WebsiteNode *linked_websites, Website *current_website, short num_categories) {
+    Website *recommended_website; /* Pointer to the recommended website in the list */
+    
+    while (current_website->category) {
+
+    }
+
+    return recommended_website;
+}
