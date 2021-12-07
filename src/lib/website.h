@@ -42,7 +42,7 @@ typedef struct Website Website;
 
 struct WebsiteNode {
     Website *website;
-    Website *more_sustainable_website;
+    struct WebsiteNode *more_sustainable_website;
 };
 typedef struct WebsiteNode WebsiteNode;
 
