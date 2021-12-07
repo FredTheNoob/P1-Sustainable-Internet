@@ -14,6 +14,7 @@ struct SimulationInput {
     unsigned short avg_user_time;
     unsigned short sim_duration_days;
     unsigned short num_simulations;
+    float sustainable_choice;
 };
 typedef struct SimulationInput SimulationInput;
 
@@ -22,14 +23,11 @@ struct SimulationOutput {
 };
 typedef struct SimulationOutput SimulationOutput;
 
-int check_key(char *key, char *valid_key);
-void print_sim_input(SimulationInput *sim_input);
 SimulationInput get_sim_input(void); /* Read the input file */
-
 SimulationOutput run_simulation(SimulationInput *sim_input);
 
-void vary_input_parameter(SimulationInput *sim_input, Website *website, char *parameter, float multiplier);
-
+int check_key(char *key, char *valid_key);
+void print_sim_input(SimulationInput *sim_input);
 void print_simulation_output(SimulationOutput *sim_output, unsigned short num_simulations);
 
 #endif

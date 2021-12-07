@@ -10,7 +10,7 @@
 #define BUFFER_SIZE 50
 #define NUM_CATEGORIES 16
 
-enum website_category {
+enum WebsiteCategory {
     ADULT,
     ARTS_AND_ENTERTAINMENT,
     COMPUTER_TECHNOLOGY,
@@ -28,21 +28,30 @@ enum website_category {
     VIDEO_STREAMING,
     WEATHER
 };
-typedef enum website_category website_category;
+typedef enum WebsiteCategory WebsiteCategory;
 
 struct Website {
     short id;
-    website_category category;
+    WebsiteCategory category;
     unsigned short avg_duration;
     float pages_per_visit;
-    float influence;
+    float pages_per_minute;
+    float weight;
 };
 typedef struct Website Website;
 
-website_category get_category(char *category);
+struct WebsiteNode {
+    Website *website;
+    Website *more_sustainable_website;
+};
+typedef struct WebsiteNode WebsiteNode;
+
+WebsiteCategory get_category(char *category);
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
 
 void load_websites(Website *websites, SimulationInput *sim_input);
+
+void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input);
 
 #endif

@@ -1,7 +1,7 @@
 /* 
  *  Title:          Sustainable Webbrowsing
  *  Group:          SW B222
- *  Names:          Andreas, Ali, Alexander, Viktor, Frederik, Thorbjørn & Jonas.
+ *  Names:          Ali, Alexander, Viktor, Frederik, Thorbjørn & Jonas.
  *  Supervisor:     Morten Konggard Schou
  *  Initial commit: 23/11-2021
  *  Date completed: ??/12-2021
@@ -19,6 +19,12 @@ int main(void) {
 
     /* Simulation input */
     SimulationInput sim_input = get_sim_input();
+
+    /* Load website data */
+    /* ... */
+
+    /* Convert to array of linked lists */
+    /* ... */
 
     /* Array of all simulation outputs */
     SimulationOutput sim_outputs[sim_input.num_simulations];

@@ -8,7 +8,7 @@ Website *get_website(Website *websites, unsigned int num_websites, short previou
 
     /* Iterates through websites until the sum exceeds the random number */
     while (propabilities_sum < rand_0_1 && i < num_websites - 1) {
-        propabilities_sum += websites[i].influence;
+        propabilities_sum += websites[i].weight;
         i++;
     }
 
@@ -48,33 +48,31 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     for (i = 0; i < sim_input->num_websites; i++) {
         
         websites[i].id = i;
-        fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].influence, category_buffer);
+        fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].weight, category_buffer);
     
+        /* Calculates the website's avg pages shown per minute */
+        websites[i].pages_per_minute = websites[i].pages_per_visit / (websites[i].avg_duration / 60);
+
+        /* Assign the category from website data to the selected website */
         websites[i].category = get_category(category_buffer);
-    }
-
-    /* Print websites */
-    for (i = 0; i < sim_input->num_websites; i++) {
-
-        printf("%2d   %lf   %d\n", websites[i].id, websites[i].influence, websites[i].category);
     }
     
     /* Close file */
     fclose(fp);
 
-    /* Check if the influences add up to 100 */
+    /* Check if the weights add up to 100 */
     double sum = 0;
     for (unsigned int i = 0; i < sim_input->num_websites; i++) {
-        sum += websites[i].influence;
+        sum += websites[i].weight;
     }
     if (sum < 0.999 || sum > 1.001) {
-        printf("[ERROR] Failed to load websites. Influences(=%lf) didn't add up to 1.0 (100%%)\n", sum);
+        printf("[ERROR] Failed to load websites. Weights(=%lf) didn't add up to 1.0 (100%%)\n", sum);
         exit(EXIT_FAILURE);
     }
 }
 
 /* Function that returns the corresponding enum */
-website_category get_category(char *category) {
+WebsiteCategory get_category(char *category) {
 
     char* categories[] = {
         "Adult",
