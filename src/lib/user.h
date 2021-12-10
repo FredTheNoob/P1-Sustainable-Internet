@@ -13,8 +13,6 @@ struct User {
 };
 typedef struct User User;
 
-void generate_users(User *users, SimulationInput *sim_input);
-
 void reset_users(User *users, unsigned short num_users);
 
 void handle_user(User *user, Website *websites, unsigned short num_websites); /* Logic to conrol whether a user should be assigned a new website */

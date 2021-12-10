@@ -20,11 +20,16 @@ int main(void) {
     /* Simulation input */
     SimulationInput sim_input = get_sim_input();
 
-    /* Load website data */
-    /* ... */
+    /* Create array of users */
+    User users[sim_input.num_users];
+    generate_users(users, &sim_input);
+
+    /* Create array of websites */
+    Website websites[sim_input.num_websites];
+    load_websites(websites, &sim_input);
 
     /* Convert to array of linked lists */
-    /* ... */
+    /* convert_websites(); */
 
     /* Array of all simulation outputs */
     SimulationOutput sim_outputs[sim_input.num_simulations];
@@ -32,7 +37,7 @@ int main(void) {
     /* Run all simulations */
     for (int i = 0; i < sim_input.num_simulations; i++) {
         
-        sim_outputs[i] = run_simulation(&sim_input);
+        sim_outputs[i] = run_simulation(&sim_input, users, websites);
     }
 
     print_simulation_output(sim_outputs, sim_input.num_simulations);

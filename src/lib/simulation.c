@@ -53,17 +53,63 @@ SimulationInput get_sim_input() {
     return sim_input;
 }
 
-SimulationOutput run_simulation(SimulationInput *simulation_input) {
+/* Generate user data for the given number of users (from the simulation input file) */
+void generate_users(User *users, SimulationInput *sim_input) {
+    for (int i = 0; i < sim_input->num_users; i++) {
+        users[i].total_daily_time = 0;
+        users[i].max_daily_time = sim_input->avg_user_time; /* ----- generate "random" avg_user_time ----- */
+        users[i].total_pages = 0;
+        users[i].current_website = NULL;
+    }
+}
+
+void load_websites(Website *websites, SimulationInput *sim_input) {
+    FILE *fp = fopen("input/websites_data.csv", "r");
+    char category_buffer[BUFFER_SIZE];
+    int i;
+    
+    if (fp == NULL) {
+        printf("[ERROR] %s: Error opening websites_data.csv\n", __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    /* Skip over first line of csv file */
+    while (fgetc(fp) != '\n');
+    
+    /* Read file line by line */
+    for (i = 0; i < sim_input->num_websites; i++) {
+        
+        websites[i].id = i;
+        fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].weight, category_buffer);
+    
+        /* Calculates the website's avg pages shown per minute */
+        websites[i].pages_per_minute = websites[i].pages_per_visit / (websites[i].avg_duration / 60);
+
+        /* Assign the category from website data to the selected website */
+        websites[i].category = get_category(category_buffer);
+    }
+    
+    /* Close file */
+    fclose(fp);
+
+    /* Check if the weights add up to 100 */
+    double sum = 0;
+    for (unsigned int i = 0; i < sim_input->num_websites; i++) {
+        sum += websites[i].weight;
+    }
+    if (sum < 0.999 || sum > 1.001) {
+        printf("[ERROR] Failed to load websites. Weights(=%lf) didn't add up to 1.0 (100%%)\n", sum);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input) {
+    /* Write the function here */
+}
+
+SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites) {
     SimulationOutput simulation_output;
     unsigned short sim_days, user_index;
-
-    /* Create array of users */
-    User users[simulation_input->num_users];
-    generate_users(users, simulation_input);
-
-    /* Create array of websites */
-    Website websites[simulation_input->num_websites];
-    load_websites(websites, simulation_input);
 
     /* Main loop - keeps looping until sim_days reaches sim_duration_days */
     for (sim_days = 0; sim_days < simulation_input->sim_duration_days; sim_days++) {
@@ -93,7 +139,7 @@ void print_simulation_output(SimulationOutput *sim_outputs, unsigned short num_s
     /* Print smt about the simulation - Parameters */
 
     for (int i = 0; i < num_simulations; i++) {
-        printf("%f\n", sim_outputs[i].total_pages); 
+        printf("%.2f\n", sim_outputs[i].total_pages); 
     }
 
     /* Eventually print what websites were accessed the most? - So in terms of clicks */

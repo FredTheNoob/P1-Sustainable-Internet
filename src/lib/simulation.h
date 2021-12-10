@@ -6,6 +6,8 @@
 #include <time.h>
 #include <string.h>
 
+#include "user.h"
+
 typedef struct Website Website;
 
 struct SimulationInput {
@@ -24,10 +26,19 @@ struct SimulationOutput {
 typedef struct SimulationOutput SimulationOutput;
 
 SimulationInput get_sim_input(void); /* Read the input file */
-SimulationOutput run_simulation(SimulationInput *sim_input);
 
 int check_key(char *key, char *valid_key);
+
+void generate_users(User *users, SimulationInput *sim_input);
+
+void load_websites(Website *websites, SimulationInput *sim_input);
+
+void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input);
+
+SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites);
+
 void print_sim_input(SimulationInput *sim_input);
+
 void print_simulation_output(SimulationOutput *sim_output, unsigned short num_simulations);
 
 #endif

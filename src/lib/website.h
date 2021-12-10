@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "simulation.h"
-
 #define BUFFER_SIZE 50
 #define NUM_CATEGORIES 16
 
@@ -49,9 +47,5 @@ typedef struct WebsiteNode WebsiteNode;
 WebsiteCategory get_category(char *category);
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
-
-void load_websites(Website *websites, SimulationInput *sim_input);
-
-void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input);
 
 #endif

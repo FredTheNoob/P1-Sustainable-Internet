@@ -1,15 +1,5 @@
 #include "user.h"
 
-/* Generate user data for the given number of users (from the simulation input file) */
-void generate_users(User *users, SimulationInput *sim_input) {
-    for (int i = 0; i < sim_input->num_users; i++) {
-        users[i].total_daily_time = 0;
-        users[i].max_daily_time = sim_input->avg_user_time; /* ----- generate "random" avg_user_time ----- */
-        users[i].total_pages = 0;
-        users[i].current_website = NULL;
-    }
-}
-
 void reset_users(User *users, unsigned short num_users) {
     for (int i = 0; i < num_users; i++) {
         users[i].total_daily_time = 0;
@@ -58,11 +48,12 @@ void assign_website(User *user, Website *websites, unsigned short num_websites) 
 } 
 
 Website *recommend_website(WebsiteNode *linked_websites, Website *current_website, short num_categories) {
-    Website *recommended_website; /* Pointer to the recommended website in the list */
+    // Website *recommended_website; /* Pointer to the recommended website in the list */
     
-    while (current_website->category) {
+    // while (current_website->category) {
 
-    }
+    // }
 
-    return recommended_website;
+    // return recommended_website;
+    return NULL; /* REMOVE THIS */
 }
