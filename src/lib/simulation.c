@@ -86,7 +86,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
         fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].weight, category_buffer);
     
         /* Calculates the website's avg pages shown per minute */
-        websites[i].pages_per_minute = websites[i].pages_per_visit / (websites[i].avg_duration / 60);
+        websites[i].pages_per_minute = websites[i].pages_per_visit / ((float)websites[i].avg_duration / 60);
 
         /* Assign the category from website data to the selected website */
         websites[i].category = get_category(category_buffer);
@@ -107,7 +107,104 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
 }
 
 void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input) {
-    /* Write the function here */
+    int i;
+
+    linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
+
+    for (i = 0; i < sim_input->num_categories; i++) {
+        linked_websites[i] = NULL;
+    }
+
+    for (i = 0; i < sim_input->num_websites; i++) {
+        insert_website_node(linked_websites, &websites[i]);
+    }
+    
+    print_linked_websites(linked_websites, sim_input->num_categories);
+}
+    
+void insert_website_node(WebsiteNode **linked_websites, Website *website) {
+    WebsiteNode *new_node = NULL, *previous_node = NULL, *current_node = linked_websites[website->category];  
+    
+    if (current_node == NULL) {
+        new_node = alloc_website_node(website);
+        linked_websites[website->category] = new_node;         
+    }
+    else {
+        while (current_node != NULL && current_node->website->pages_per_minute > website->pages_per_minute) {
+            previous_node = current_node;
+            current_node = current_node->more_sustainable_website;
+        }
+
+        new_node = alloc_website_node(website);
+
+        /* Insert at the start of the list */
+        if (previous_node == NULL) {
+            new_node->more_sustainable_website = current_node;
+            linked_websites[website->category] = new_node;
+        }
+        /* Insert at the end of the list */
+        else if (current_node == NULL) {
+            previous_node->more_sustainable_website = new_node;
+
+        }
+        /* Insert in between */
+        else {
+            previous_node->more_sustainable_website = new_node;
+            new_node->more_sustainable_website = current_node;
+        }
+    }
+} 
+
+WebsiteNode *alloc_website_node(Website *website) {
+    WebsiteNode *new_website_node = (WebsiteNode*)malloc(sizeof(WebsiteNode));
+    
+    if (new_website_node == NULL) {
+        printf("Failed to allocate memory for website_node\n\n");
+        exit(EXIT_FAILURE);
+    }
+
+    new_website_node->website = website;
+    new_website_node->more_sustainable_website = NULL;
+
+    return new_website_node;
+}
+
+/*
+WebsiteNode *find_node_index(WebsiteNode **linked_websites, Website *website) {
+    WebsiteNode *website_node;
+    WebsiteNode *tmp_node;
+    
+    while (linked_websites[website->category]->website != NULL){
+        
+        tmp_node = linked_websites[website->category];
+        if(linked_websites[website->category]->website->pages_per_minute < website->pages_per_minute && linked_websites[website->category]->more_sustainable_website != NULL) {
+            return tmp_node;
+        }
+        
+        
+    }
+    
+    return website_node;        
+}
+*/
+
+void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
+    int i;
+
+    for (i = 0; i < num_categories; i++)
+    {
+        WebsiteNode *current_node = linked_websites[i];
+        
+        //printf("%d\n", current_node == NULL);
+
+        printf("%d ", i);
+        while (current_node != NULL) {
+            printf("%.3f ", current_node->website->pages_per_minute);
+            current_node = current_node->more_sustainable_website;
+        }
+        printf("\n");
+    }
+    
 }
 
 SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites, WebsiteNode **linked_websites) {
@@ -124,7 +221,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
 
         /* loop through all users and call handle website function */
         for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-            handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
+            //handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
         }
 
         /* Handle output before resetting users */
