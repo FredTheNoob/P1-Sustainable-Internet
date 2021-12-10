@@ -28,8 +28,9 @@ int main(void) {
     Website websites[sim_input.num_websites];
     load_websites(websites, &sim_input);
 
-    /* Convert to array of linked lists */
-    /* convert_websites(); */
+    /* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
+    WebsiteNode *linked_websites[sim_input.num_categories];
+    convert_websites(linked_websites, websites, &sim_input);
 
     /* Array of all simulation outputs */
     SimulationOutput sim_outputs[sim_input.num_simulations];
@@ -37,7 +38,7 @@ int main(void) {
     /* Run all simulations */
     for (int i = 0; i < sim_input.num_simulations; i++) {
         
-        sim_outputs[i] = run_simulation(&sim_input, users, websites);
+        sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
     }
 
     print_simulation_output(sim_outputs, sim_input.num_simulations);

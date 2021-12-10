@@ -28,6 +28,9 @@ SimulationInput get_sim_input() {
         else if (check_key(key, "NUM_WEBSITES")) {
             sim_input.num_websites = value;
         }
+        else if (check_key(key, "NUM_CATEGORIES")) {
+            sim_input.num_categories = value;
+        }
         else if (check_key(key, "AVG_USER_TIME")) {
             sim_input.avg_user_time = value;
         }
@@ -103,11 +106,11 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 }
 
-void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input) {
+void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input) {
     /* Write the function here */
 }
 
-SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites) {
+SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites, WebsiteNode **linked_websites) {
     SimulationOutput simulation_output;
     unsigned short sim_days, user_index;
 
@@ -116,7 +119,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
 
         /* loop through all users and call handle website function */
         for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-            handle_user(&users[user_index], websites, simulation_input->num_websites);
+            handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
         }
 
         /* Handle output before resetting users */

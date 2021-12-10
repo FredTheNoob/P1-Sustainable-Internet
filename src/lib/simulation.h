@@ -12,6 +12,7 @@ typedef struct Website Website;
 
 struct SimulationInput {
     unsigned short num_websites;
+    unsigned short num_categories;
     unsigned short num_users;
     unsigned short avg_user_time;
     unsigned short sim_duration_days;
@@ -33,9 +34,9 @@ void generate_users(User *users, SimulationInput *sim_input);
 
 void load_websites(Website *websites, SimulationInput *sim_input);
 
-void convert_websites(WebsiteNode *linked_websites, Website *websites, SimulationInput *sim_input);
+void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input);
 
-SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites);
+SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites);
 
 void print_sim_input(SimulationInput *sim_input);
 

@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 #define BUFFER_SIZE 50
-#define NUM_CATEGORIES 16
 
 enum WebsiteCategory {
     ADULT,
