@@ -29,8 +29,7 @@ int main(void) {
     load_websites(websites, &sim_input);
 
     /* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
-    WebsiteNode **linked_websites = NULL;
-    convert_websites(linked_websites, websites, &sim_input);
+    WebsiteNode **linked_websites = convert_websites(websites, &sim_input);
 
     /* Array of all simulation outputs */
     SimulationOutput sim_outputs[sim_input.num_simulations];
@@ -41,7 +40,7 @@ int main(void) {
         sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
     }
 
-    //print_simulation_output(sim_outputs, sim_input.num_simulations);
+    // print_simulation_output(sim_outputs, sim_input.num_simulations);
 
     printf("Reached end of program\n");
 

@@ -45,7 +45,9 @@ typedef struct WebsiteNode WebsiteNode;
 
 struct WebsiteAlternative {
     Website *website;
-    short **matrix;
+    short *matrix;
+    short num_x;
+    short num_y;
 };
 typedef struct WebsiteAlternative WebsiteAlternative;
 

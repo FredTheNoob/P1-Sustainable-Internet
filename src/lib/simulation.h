@@ -34,7 +34,7 @@ void generate_users(User *users, SimulationInput *sim_input);
 
 void load_websites(Website *websites, SimulationInput *sim_input);
 
-void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input);
+WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input);
 
 void insert_website_node(WebsiteNode **linked_websites, Website *website);
 

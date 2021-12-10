@@ -106,10 +106,9 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 }
 
-void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input) {
+WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     int i;
-
-    linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
+    WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
 
     for (i = 0; i < sim_input->num_categories; i++) {
         linked_websites[i] = NULL;
@@ -120,6 +119,8 @@ void convert_websites(WebsiteNode **linked_websites, Website *websites, Simulati
     }
     
     print_linked_websites(linked_websites, sim_input->num_categories);
+
+    return linked_websites;
 }
     
 void insert_website_node(WebsiteNode **linked_websites, Website *website) {
@@ -211,10 +212,18 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     SimulationOutput simulation_output;
     unsigned short current_day, user_index;
 
-
     const unsigned short NUM_WEBSITE_ALTERNATIVES = simulation_input->num_websites - simulation_input->num_categories;
     WebsiteAlternative *website_matrices[NUM_WEBSITE_ALTERNATIVES];
     generate_matrices(website_matrices, linked_websites, simulation_input->num_categories, simulation_input->num_users, NUM_WEBSITE_ALTERNATIVES);
+
+    // /* TEST Print matrices */
+    // for (int i = 0; i < NUM_WEBSITE_ALTERNATIVES; i++) {
+    //     printf("[%d]\t", i);
+    //     for (int j = 0; j < website_matrices[i]->num_x * website_matrices[i]->num_y; j++) {
+    //         printf("%d ", website_matrices[i]->matrix[j]);
+    //     }
+    //     printf("\n");
+    // }
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
     for (current_day = 0; current_day < simulation_input->sim_duration_days; current_day++) {
@@ -260,9 +269,6 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
 
             WebsiteAlternative* website_alternative = (WebsiteAlternative*) malloc(sizeof(WebsiteAlternative));
 
-            /* Assign current website to website alternative */
-            website_alternative->website = current_node->website;
-
             short num_x = (num_websites_in_category - 1) - website_index;
             short num_y = num_users;
 
@@ -273,6 +279,13 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
                     matrix[matrix_index] = -1;
                 }
             }
+            
+            /* Assign width and height to the WebsiteAlternative struct */
+            website_alternative->num_x = num_x;
+            website_alternative->num_y = num_y;
+
+            /* Assign current website to website alternative */
+            website_alternative->website = current_node->website;
 
             /* Put website alternative into the array */
             website_matrices[website_alt_index] = website_alternative;
@@ -282,6 +295,9 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
             website_index++;
             current_node = current_node->more_sustainable_website;
         }
+    }
+    if (website_alt_index != NUM_WEBSITE_ALTERNATIVES) {
+        printf("[ERROR] Number of website alternatives didn't add up (%d != %d)\n", website_alt_index, NUM_WEBSITE_ALTERNATIVES);
     }
 }
 
