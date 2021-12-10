@@ -39,7 +39,7 @@ sharedcommit.txt
 *.hex
 
 # Debug files
-*.vscode/
+.vscode/
 *.dSYM/
 *.su
 *.idb
