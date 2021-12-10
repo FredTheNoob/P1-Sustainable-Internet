@@ -36,6 +36,14 @@ void load_websites(Website *websites, SimulationInput *sim_input);
 
 void convert_websites(WebsiteNode **linked_websites, Website *websites, SimulationInput *sim_input);
 
+void insert_website_node(WebsiteNode **linked_websites, Website *website);
+
+WebsiteNode *alloc_website_node(Website *website);
+
+WebsiteNode *find_node_index(WebsiteNode **linked_websites, Website *website);
+
+void print_linked_websites(WebsiteNode **linked_websites, int num_categories);
+
 SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites);
 
 void print_sim_input(SimulationInput *sim_input);
