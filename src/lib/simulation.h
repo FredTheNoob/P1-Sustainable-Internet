@@ -38,6 +38,8 @@ void convert_websites(WebsiteNode **linked_websites, Website *websites, Simulati
 
 SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites);
 
+void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, unsigned short num_categories, unsigned short num_users, const unsigned short NUM_WEBSITE_ALTERNATIVES);
+
 void print_sim_input(SimulationInput *sim_input);
 
 void print_simulation_output(SimulationOutput *sim_output, unsigned short num_simulations);

@@ -26,7 +26,7 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, u
         /* Recommend a more sustainable website based on the initial website */
         sustainable_website = recommend_website(linked_websites, website, num_categories);
 
-        /* Logic to control which website to choose - the susatinable alternative or the initial website */
+        /* Logic to control which website to choose - the sustainable alternative or the initial website */
         chosen_website = choose_website(website, sustainable_website, sustainable_choice);
         
         /* Assign the chosen website to user */
@@ -54,14 +54,13 @@ void assign_website(User *user, Website *chosen_website) {
 } 
 
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short num_categories) {
-    // Website *recommended_website; /* Pointer to the recommended website in the list */
+    Website *recommended_website = NULL;
     
-    // while (current_website->category) {
+    while (current_website->category) {
 
-    // }
+    }
 
-    // return recommended_website;
-    return NULL; /* REMOVE THIS */
+    return recommended_website;
 }
 
 Website *choose_website(Website *website, Website *sustainable_website, float sustainable_choice) {

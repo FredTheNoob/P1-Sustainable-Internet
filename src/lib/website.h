@@ -43,6 +43,12 @@ struct WebsiteNode {
 };
 typedef struct WebsiteNode WebsiteNode;
 
+struct WebsiteAlternative {
+    Website *website;
+    short **matrix;
+};
+typedef struct WebsiteAlternative WebsiteAlternative;
+
 WebsiteCategory get_category(char *category);
 
 Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
