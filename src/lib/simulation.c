@@ -109,10 +109,10 @@ void convert_websites(WebsiteNode *linked_websites, Website *websites, Simulatio
 
 SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites) {
     SimulationOutput simulation_output;
-    unsigned short sim_days, user_index;
+    unsigned short current_day, user_index;
 
-    /* Main loop - keeps looping until sim_days reaches sim_duration_days */
-    for (sim_days = 0; sim_days < simulation_input->sim_duration_days; sim_days++) {
+    /* Main loop - keeps looping until current_day reaches sim_duration_days */
+    for (current_day = 0; current_day < simulation_input->sim_duration_days; current_day++) {
 
         /* loop through all users and call handle website function */
         for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
