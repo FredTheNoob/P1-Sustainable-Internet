@@ -110,10 +110,12 @@ WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     int i;
     WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
 
+    /* Set all indexes to NULL */
     for (i = 0; i < sim_input->num_categories; i++) {
         linked_websites[i] = NULL;
     }
 
+    /* Insert a website node for each website in the website array */
     for (i = 0; i < sim_input->num_websites; i++) {
         insert_website_node(linked_websites, &websites[i]);
     }
@@ -195,8 +197,6 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
     for (i = 0; i < num_categories; i++)
     {
         WebsiteNode *current_node = linked_websites[i];
-        
-        //printf("%d\n", current_node == NULL);
 
         printf("%d ", i);
         while (current_node != NULL) {
@@ -216,13 +216,12 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     WebsiteAlternative *website_matrices[NUM_WEBSITE_ALTERNATIVES];
     generate_matrices(website_matrices, linked_websites, simulation_input->num_categories, simulation_input->num_users, NUM_WEBSITE_ALTERNATIVES);
 
-    // /* TEST Print matrices */
+    /* TEST Print matrices */
     // for (int i = 0; i < NUM_WEBSITE_ALTERNATIVES; i++) {
-    //     printf("[%d]\t", i);
+
     //     for (int j = 0; j < website_matrices[i]->num_x * website_matrices[i]->num_y; j++) {
     //         printf("%d ", website_matrices[i]->matrix[j]);
     //     }
-    //     printf("\n");
     // }
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
@@ -230,7 +229,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
 
         /* loop through all users and call handle website function */
         for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-            //handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
+            handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
         }
 
         /* Handle output before resetting users */
@@ -286,6 +285,9 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
 
             /* Assign current website to website alternative */
             website_alternative->website = current_node->website;
+
+            /* Assign generated matrix to website alternative */
+            website_alternative->matrix = matrix;
 
             /* Put website alternative into the array */
             website_matrices[website_alt_index] = website_alternative;

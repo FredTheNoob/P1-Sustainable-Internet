@@ -54,22 +54,21 @@ void assign_website(User *user, Website *chosen_website) {
 } 
 
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short num_categories) {
-    Website *recommended_website = NULL;
+    /* Website *recommended_website = NULL; */
     
-    while (current_website->category) {
-
-    }
-
-    return recommended_website;
+    
+    /* return recommend_website; */
+    return current_website;
 }
 
 Website *choose_website(Website *website, Website *sustainable_website, float sustainable_choice) {
-    Website *chosen_website = NULL;
+    /* Website *chosen_website = NULL; */
     
     /* If sustaianable choice == 0.00 */
     /* chosen_website = website; */
 
     /* Write the function here */
 
-    return chosen_website;
+    /* return chosen_website; */
+    return website;
 }
