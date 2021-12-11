@@ -46,7 +46,7 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories);
 
 SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites);
 
-void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, unsigned short num_categories, unsigned short num_users, const unsigned short NUM_WEBSITE_ALTERNATIVES);
+void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, const short NUM_CATEGORIES, const short NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES);
 
 void print_sim_input(SimulationInput *sim_input);
 

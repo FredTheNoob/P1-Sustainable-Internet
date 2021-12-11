@@ -40,7 +40,9 @@ int main(void) {
         sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
     }
 
-    // print_simulation_output(sim_outputs, sim_input.num_simulations);
+
+    // print_linked_websites(linked_websites, sim_input.num_categories);
+    print_simulation_output(sim_outputs, sim_input.num_simulations);
 
     printf("Reached end of program\n");
 

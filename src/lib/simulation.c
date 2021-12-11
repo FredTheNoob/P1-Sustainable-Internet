@@ -119,8 +119,6 @@ WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     for (i = 0; i < sim_input->num_websites; i++) {
         insert_website_node(linked_websites, &websites[i]);
     }
-    
-    print_linked_websites(linked_websites, sim_input->num_categories);
 
     return linked_websites;
 }
@@ -210,11 +208,20 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
 
 SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites, WebsiteNode **linked_websites) {
     SimulationOutput simulation_output;
-    unsigned short current_day, user_index;
+    short current_day, user_index;
 
-    const unsigned short NUM_WEBSITE_ALTERNATIVES = simulation_input->num_websites - simulation_input->num_categories;
+    /* Simulation input constants */
+    const short NUM_USERS = simulation_input->num_users;
+    const short SIM_DURATION_DAYS = simulation_input->sim_duration_days;
+    const short NUM_WEBSITES = simulation_input->num_websites;
+    const short NUM_CATEGORIES = simulation_input->num_categories;
+    const float SUSTAINABLE_CHOICE = simulation_input->sustainable_choice;
+
+    const short NUM_WEBSITE_ALTERNATIVES = NUM_WEBSITES - NUM_CATEGORIES;
+
+
     WebsiteAlternative *website_matrices[NUM_WEBSITE_ALTERNATIVES];
-    generate_matrices(website_matrices, linked_websites, simulation_input->num_categories, simulation_input->num_users, NUM_WEBSITE_ALTERNATIVES);
+    generate_matrices(website_matrices, linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
     /* TEST Print matrices */
     // for (int i = 0; i < NUM_WEBSITE_ALTERNATIVES; i++) {
@@ -225,32 +232,36 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     // }
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
-    for (current_day = 0; current_day < simulation_input->sim_duration_days; current_day++) {
+    for (current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
 
-        /* loop through all users and call handle website function */
-        for (user_index = 0; user_index < simulation_input->num_users; user_index++) {
-            handle_user(&users[user_index], websites, linked_websites, simulation_input->num_websites, simulation_input->num_categories, simulation_input->sustainable_choice);
+        /* loop through all users and call handle_user function */
+        for (user_index = 0; user_index < NUM_USERS; user_index++) {
+
+            handle_user(&users[user_index], websites, linked_websites, NUM_WEBSITES, NUM_CATEGORIES, SUSTAINABLE_CHOICE);
         }
 
         /* Handle output before resetting users */
 
         /* Resets all users */
-        reset_users(users, simulation_input->num_users);
+        reset_users(users, NUM_USERS);
     }
 
     /* Calculate total number of pages downloaded */
     simulation_output.total_pages = 0;
-    for (int i = 0; i < simulation_input->num_users; i++) {
+    for (int i = 0; i < NUM_USERS; i++) {
         simulation_output.total_pages += users[i].total_pages;
+
+        /* Reset each user's total pages before next simulation */
+        users[i].total_pages = 0;
     }
 
     return simulation_output;
 }
 
-void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, unsigned short num_categories, unsigned short num_users, const unsigned short NUM_WEBSITE_ALTERNATIVES) {
+void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, const short NUM_CATEGORIES, const short NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
     short website_alt_index = 0;
 
-    for (short category_index = ADULT; category_index < num_categories; category_index++) {
+    for (short category_index = ADULT; category_index < NUM_CATEGORIES; category_index++) {
         WebsiteNode *current_node = linked_websites[category_index];
         short num_websites_in_category = 0, website_index = 0;
 
@@ -269,7 +280,7 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
             WebsiteAlternative* website_alternative = (WebsiteAlternative*) malloc(sizeof(WebsiteAlternative));
 
             short num_x = (num_websites_in_category - 1) - website_index;
-            short num_y = num_users;
+            short num_y = NUM_USERS;
 
             short *matrix = (short*) malloc(sizeof(short) * num_x * num_y);
             for (int y = 0; y < num_y; y++) {
