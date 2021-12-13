@@ -22,6 +22,6 @@ void assign_website(User *user, Website *chosen_website); /* Assign website to u
 
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES);
 
-Website *choose_website(Website *website, Website *sustainable_website, float sustainable_choice);
+Website *choose_website(Website *website, Website *sustainable_website, short user_id, float sustainable_choice);
 
 #endif

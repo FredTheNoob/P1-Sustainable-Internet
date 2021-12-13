@@ -46,7 +46,23 @@ int main(void) {
     }
     end_t = clock();
 
-    //print_linked_websites(linked_websites, sim_input.num_categories);
+    /* TEST PRINT FOR FIRST WEBSITE'S MATRIX */
+    for (int y = 0; y < linked_websites[0]->website->alternatives_matrix->num_y; y++) {
+        printf("%p\t", &users[y]);
+        for (int x = 0; x < linked_websites[0]->website->alternatives_matrix->num_x; x++) {
+            int index = x + y * linked_websites[0]->website->alternatives_matrix->num_x;
+            printf("%-15p  ", linked_websites[0]->website->alternatives_matrix->matrix[index]);
+
+        }
+        printf("\n");
+    }
+    printf("\n%p\n", linked_websites[0]->website);
+    printf("\n%p\n", linked_websites[0]->next->website);
+    printf("\n%p\n", linked_websites[0]->next->next->website);
+
+
+
+    // print_linked_websites(linked_websites, sim_input.num_categories);
     print_sim_output(sim_outputs, sim_input.num_simulations);
 
     printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);

@@ -251,7 +251,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
             short num_x = (num_websites_in_category - 1) - website_index;
             short num_y = NUM_USERS;
 
-            short *matrix = (short*) malloc(sizeof(short) * num_x * num_y);
+            Website **matrix = (Website**) malloc(sizeof(Website*) * num_x * num_y);
             int matrix_index;
             for (int y = 0; y < num_y; y++) {
                 for (int x = 0; x < num_x; x++) {
@@ -262,16 +262,23 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
                     if (rand_0_1 < 0.5) {
                         /* 25% chance to make a sustainable choice */
                         if (rand_0_1 < 0.25) {
-                            matrix[matrix_index] = 1;
+                            WebsiteNode *temp_current_node = current_node->next;
+                            short temp_index = 0;
+                            /* Make sure the right website pointer is assigned to the corresponding x value in the matrix */
+                            while (temp_index < x) {
+                                temp_index++;
+                                temp_current_node = temp_current_node->next;
+                            }
+                            matrix[matrix_index] = temp_current_node->website;
                         }
                         /* 25% chance to make a non-sustainable choice */
                         else {
-                            matrix[matrix_index] = 0;
+                            matrix[matrix_index] = current_node->website;
                         }
                     }
                     /* User made no choice */
                     else {
-                        matrix[matrix_index] = -1;
+                        matrix[matrix_index] = NULL;
                     }
                 }
             }
@@ -291,6 +298,8 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
             website_alt_index++;
             current_node = current_node->next;
         }
+        /* Set the alternative matrix of the last website in each category to NULL */
+        current_node->website->alternatives_matrix = NULL;
     }
     if (website_alt_index != NUM_WEBSITE_ALTERNATIVES) {
         printf("[ERROR] Number of website alternatives didn't add up (%d != %d)\n", website_alt_index, NUM_WEBSITE_ALTERNATIVES);

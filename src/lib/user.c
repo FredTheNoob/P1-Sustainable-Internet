@@ -26,21 +26,22 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
             website = get_website(websites, NUM_WEBSITES, user->current_website->id); /* Returns a new website */
         }
 
-        /* Find out if it is possible to recommend a website to the user, which is 
-        more sustainable than the most sustainable website that the user has already
-        accepted as an alternative to this specific website */
-        /* FUNCTION CALL */
+        /* If the website's matrix == NULL it is the most sustainable website in the category */
+        if (website->alternatives_matrix == NULL) {
+            chosen_website = website;
+        } else {
+            /* Recommend a more sustainable website based on the initial website */
+            sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
 
+            // printf("%p\t%d\n", sustainable_website, website->alternatives_matrix->num_x);
+
+            /* Logic to control which website to choose - the sustainable alternative or the initial website */
+            chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
             
-        /* Recommend a more sustainable website based on the initial website */
-        sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
+        }
 
-        /* Logic to control which website to choose - the sustainable alternative or the initial website */
-        chosen_website = choose_website(website, sustainable_website, SUSTAINABLE_CHOICE);
-        
         /* Assign the chosen website to user */
         assign_website(user, chosen_website);
-
 
         if (user->total_daily_time + user->current_website->avg_duration < user->max_daily_time) {
 
@@ -70,64 +71,107 @@ void assign_website(User *user, Website *chosen_website) {
 } 
 
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES) {
-    int index, num_total_interactions;
-
-    int user_index = user_id;
+    Website *recommended_website = NULL;
+    int num_total_interactions, num_common_interactions;
+    int user_index = user_id, similar_user_index;
 
     int most_similar_user_id = -1;
     float most_similar_jaccard = 0, current_jaccard;
     
-    int num_common_interactions = 0;
-
+    /* Number of users and websites in the current website's matrix of alternative websites */
     int num_users = current_website->alternatives_matrix->num_y;
     int num_alternatives_in_category = current_website->alternatives_matrix->num_x;
-    short *alternative_matrix = current_website->alternatives_matrix->matrix;
+
+    Website **alternative_matrix = current_website->alternatives_matrix->matrix;
 
     for (int y = 0; y < num_users; y++) {
         /* (x) + y * width */
-        index = y * num_alternatives_in_category;
+        similar_user_index = y * num_alternatives_in_category;
         num_common_interactions = 0;
         num_total_interactions = 0;
         for (int x = 0; x < num_alternatives_in_category; x++) {
             /* Make sure that the user itself is skipped */
-            if (index == user_index) {
+            if (similar_user_index == user_index) {
                 continue;
             }
             /* If both values are -1, skip to the next iteration in the for loop */
-            else if (alternative_matrix[index + x] == -1 && alternative_matrix[user_index + x] == -1) {
+            else if (alternative_matrix[similar_user_index + x] == NULL && alternative_matrix[user_index + x] == NULL) {
                 continue;
             }
             /* Else if both values are the same, increment num_common_interactions */
-            else if (alternative_matrix[index + x] == alternative_matrix[user_index + x]) {
+            else if (alternative_matrix[similar_user_index + x] == alternative_matrix[user_index + x]) {
                 num_common_interactions++;
             }
             /* If one of the values are not -1, increment num_total_interactions */
-            if (alternative_matrix[index + x] != -1 || alternative_matrix[user_index + x] != -1) {
+            if (alternative_matrix[similar_user_index + x] != NULL || alternative_matrix[user_index + x] != NULL) {
                 num_total_interactions++;
             }
         }
         
         /* Calculate similarity for user */
-        current_jaccard = num_common_interactions / num_total_interactions;
+        current_jaccard = num_total_interactions > 0 ? num_common_interactions / num_total_interactions : 0;
 
         if (current_jaccard > most_similar_jaccard) {
             most_similar_user_id = y;
             most_similar_jaccard = current_jaccard;
         }
     }
-    
+
+    /* If most_similar_user_id hasn't been updated from -1, the algortithm hasn't 
+    found proper recommendation - therefore return the current_website */
+    if (most_similar_user_id == -1) {
+        return current_website;
+    }
+
+    /* Loop through the matrix at index 'user_id' and 'most_similar_user_id' and compare */
+    short compare_index = num_alternatives_in_category - 1;
+    bool found_alternative = false;
+
+    similar_user_index = most_similar_user_id * num_alternatives_in_category;
+
+    while (compare_index >= 0 && !found_alternative) {
+
+        /* If the user has accepted a more sustainable website than the similar user can recommend, just choose that website */
+        if (alternative_matrix[user_index + compare_index] != NULL && alternative_matrix[user_index + compare_index] != current_website) {
+            recommended_website = alternative_matrix[user_index + compare_index];
+            found_alternative = true;
+        }
+        /* If the similar user has accepted a website that the user hasn't interacted with yet, recommend that website */
+        else if (alternative_matrix[similar_user_index + compare_index] != NULL && 
+                 alternative_matrix[similar_user_index + compare_index] != current_website && 
+                 alternative_matrix[user_index + compare_index] == NULL) {
+            
+            recommended_website = alternative_matrix[similar_user_index + compare_index];
+            found_alternative = true;
+        }
+
+        compare_index--;
+    }
 
     
-    
-    /* return recommend_website; */
-    return current_website;
+    /* If no recommendation was found, return the current website */
+    return recommended_website != NULL ? recommended_website : current_website;
 }
 
-Website *choose_website(Website *website, Website *sustainable_website, const float SUSTAINABLE_CHOICE) {
+Website *choose_website(Website *website, Website *sustainable_website, short user_id, const float SUSTAINABLE_CHOICE) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
+    Website *chosen_website = NULL;
+    // Website **matrix;
+    // short num_x;
 
-    /* Update  */
+    // matrix = sustainable_website->alternatives_matrix->matrix;
+    // num_x = sustainable_website->alternatives_matrix->num_x;
+
+
     
-    return rand_0_1 < SUSTAINABLE_CHOICE ? sustainable_website : website;
+    if (rand_0_1 < SUSTAINABLE_CHOICE) {
+
+        chosen_website = sustainable_website;
+    } else {
+
+        chosen_website = website;
+    }
+    
+    return chosen_website;
 }

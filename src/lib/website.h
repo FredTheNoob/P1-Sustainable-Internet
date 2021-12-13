@@ -7,6 +7,8 @@
 
 #define BUFFER_SIZE 50
 
+typedef struct WebsiteAlternative WebsiteAlternative;
+
 enum WebsiteCategory {
     ADULT,
     ARTS_AND_ENTERTAINMENT,
@@ -27,13 +29,6 @@ enum WebsiteCategory {
 };
 typedef enum WebsiteCategory WebsiteCategory;
 
-struct WebsiteAlternative {
-    short *matrix;
-    short num_x;
-    short num_y;
-};
-typedef struct WebsiteAlternative WebsiteAlternative;
-
 struct Website {
     short id;
     WebsiteCategory category;
@@ -50,6 +45,13 @@ struct WebsiteNode {
     struct WebsiteNode *next;
 };
 typedef struct WebsiteNode WebsiteNode;
+
+struct WebsiteAlternative {
+    Website **matrix;
+    short num_x;
+    short num_y;
+};
+typedef struct WebsiteAlternative WebsiteAlternative;
 
 
 
