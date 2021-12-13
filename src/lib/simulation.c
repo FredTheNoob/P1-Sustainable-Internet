@@ -291,18 +291,15 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
             website_alternative->num_x = num_x;
             website_alternative->num_y = num_y;
 
-            /* Assign current website to website alternative */
-            website_alternative->website = current_node->website;
-
             /* Assign generated matrix to website alternative */
             website_alternative->matrix = matrix;
 
-            /* Put website alternative into the array */
-            website_matrices[website_alt_index] = website_alternative;
-            website_alt_index++;
+            /* Assign current website to website alternative */
+            current_node->website->alternatives_matrix = website_alternative;
 
             /* Increment values */
             website_index++;
+            website_alt_index++;
             current_node = current_node->more_sustainable_website;
         }
     }
