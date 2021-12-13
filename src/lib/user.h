@@ -20,7 +20,7 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
 
 void assign_website(User *user, Website *chosen_website); /* Assign website to user */
 
-Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short num_categories);
+Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES);
 
 Website *choose_website(Website *website, Website *sustainable_website, float sustainable_choice);
 

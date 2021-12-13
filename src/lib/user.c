@@ -25,9 +25,12 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
         } else {
             website = get_website(websites, NUM_WEBSITES, user->current_website->id); /* Returns a new website */
         }
+
+        /*  */
+
             
         /* Recommend a more sustainable website based on the initial website */
-        sustainable_website = recommend_website(linked_websites, website, NUM_CATEGORIES);
+        sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
 
         /* Logic to control which website to choose - the sustainable alternative or the initial website */
         chosen_website = choose_website(website, sustainable_website, SUSTAINABLE_CHOICE);
@@ -63,8 +66,54 @@ void assign_website(User *user, Website *chosen_website) {
     user->current_website = chosen_website;
 } 
 
-Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short num_categories) {
-    /* Website *recommended_website = NULL; */
+Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES) {
+    int index, num_total_interactions;
+
+    int user_index = user_id;
+
+    int most_similar_user_id = -1;
+    float most_similar_jaccard = 0, current_jaccard;
+    
+    int num_common_interactions = 0;
+
+    int num_users = current_website->alternatives_matrix->num_y;
+    int num_alternatives_in_category = current_website->alternatives_matrix->num_x;
+    short *alternative_matrix = current_website->alternatives_matrix->matrix;
+
+    for (int y = 0; y < num_users; y++) {
+        /* (x) + y * width */
+        index = y * num_alternatives_in_category;
+        num_common_interactions = 0;
+        num_total_interactions = 0;
+        for (int x = 0; x < num_alternatives_in_category; x++) {
+            /* Make sure that the user itself is skipped */
+            if (index == user_index) {
+                continue;
+            }
+            /* If both values are -1, skip to the next iteration in the for loop */
+            else if (alternative_matrix[index + x] == -1 && alternative_matrix[user_index + x] == -1) {
+                continue;
+            }
+            /* Else if both values are the same, increment num_common_interactions */
+            else if (alternative_matrix[index + x] == alternative_matrix[user_index + x]) {
+                num_common_interactions++;
+            }
+            /* If one of the values are not -1, increment num_total_interactions */
+            if (alternative_matrix[index + x] != -1 || alternative_matrix[user_index + x] != -1) {
+                num_total_interactions++;
+            }
+        }
+        
+        /* Calculate similarity for user */
+        current_jaccard = num_common_interactions / num_total_interactions;
+
+        if (current_jaccard > most_similar_jaccard) {
+            most_similar_user_id = y;
+            most_similar_jaccard = current_jaccard;
+        }
+    }
+    
+
     
     
     /* return recommend_website; */
