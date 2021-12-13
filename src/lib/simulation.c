@@ -14,7 +14,7 @@ SimulationInput get_sim_input() {
     if (fp == NULL) {
         printf("[ERROR] %s: Error opening simulation_input.txt\n", __FILE__);
         exit(EXIT_FAILURE);
-    }
+    } 
 
     /* While EOF has not been reached, load data into sim_imput */
     i = 0;
