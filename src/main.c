@@ -16,7 +16,7 @@
 
 int main(void) {
     clock_t start_t, end_t;
-    
+
     /* Seed random generator */
     srand(time(NULL));
 
@@ -47,7 +47,7 @@ int main(void) {
     end_t = clock();
 
     //print_linked_websites(linked_websites, sim_input.num_categories);
-    print_sim_output(sim_outputs, sim_input.num_simulations);
+    print_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
 
     printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);
 

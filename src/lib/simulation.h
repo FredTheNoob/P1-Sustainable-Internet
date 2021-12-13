@@ -8,6 +8,8 @@
 
 #include "user.h"
 
+#define MAX_FILE_NAME_LEN 50
+
 typedef struct Website Website;
 
 struct SimulationInput {
@@ -27,8 +29,6 @@ struct SimulationOutput {
 typedef struct SimulationOutput SimulationOutput;
 
 SimulationInput get_sim_input(void); /* Read the input file */
-
-int check_key(char *key, char *valid_key);
 
 void generate_users(User *users, SimulationInput *sim_input);
 
@@ -50,6 +50,10 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
 
 void print_sim_input(SimulationInput *sim_input);
 
-void print_sim_output(SimulationOutput *sim_output, const short NUM_SIMULATIONS);
+void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE);
+
+void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOICE);
+
+int check_key(char *key, char *valid_key);
 
 #endif
