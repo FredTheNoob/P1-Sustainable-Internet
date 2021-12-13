@@ -13,7 +13,7 @@ struct User {
 };
 typedef struct User User;
 
-void reset_users(User *users, const short num_users);
+void reset_users(User *users, const int NUM_USERS);
 
 void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, const short NUM_WEBSITES, const short NUM_CATEGORIES, const float SUSTAINABLE_CHOICE); /* Logic to conrol whether a user should be assigned a new website */
 

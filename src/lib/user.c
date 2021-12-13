@@ -2,7 +2,7 @@
 
 #define NO_WEBSITE_ID -1
 
-void reset_users(User *users, const short NUM_USERS) {
+void reset_users(User *users, const int NUM_USERS) {
     for (int i = 0; i < NUM_USERS; i++) {
         users[i].total_daily_time = 0;
         users[i].current_website = NULL;

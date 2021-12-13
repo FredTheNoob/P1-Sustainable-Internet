@@ -30,7 +30,7 @@ typedef enum WebsiteCategory WebsiteCategory;
 struct Website {
     short id;
     WebsiteCategory category;
-    unsigned short avg_duration;
+    short avg_duration;
     float pages_per_visit;
     float pages_per_minute;
     float weight;
@@ -53,6 +53,6 @@ typedef struct WebsiteAlternative WebsiteAlternative;
 
 WebsiteCategory get_category(char *category);
 
-Website *get_website(Website *websites, unsigned int num_websites, short previous_website_id);
+Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id);
 
 #endif

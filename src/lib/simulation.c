@@ -69,7 +69,6 @@ void generate_users(User *users, SimulationInput *sim_input) {
 void load_websites(Website *websites, SimulationInput *sim_input) {
     FILE *fp = fopen("input/websites_data.csv", "r");
     char category_buffer[BUFFER_SIZE];
-    int i;
     
     if (fp == NULL) {
         printf("[ERROR] %s: Error opening websites_data.csv\n", __FILE__);
@@ -80,7 +79,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     while (fgetc(fp) != '\n');
     
     /* Read file line by line */
-    for (i = 0; i < sim_input->num_websites; i++) {
+    for (int i = 0; i < sim_input->num_websites; i++) {
         
         websites[i].id = i;
         fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].weight, category_buffer);
@@ -97,7 +96,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
 
     /* Check if the weights add up to 100 */
     double sum = 0;
-    for (unsigned int i = 0; i < sim_input->num_websites; i++) {
+    for (int i = 0; i < sim_input->num_websites; i++) {
         sum += websites[i].weight;
     }
     if (sum < 0.999 || sum > 1.001) {
@@ -107,16 +106,15 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
 }
 
 WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
-    int i;
     WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
 
     /* Set all indexes to NULL */
-    for (i = 0; i < sim_input->num_categories; i++) {
+    for (int i = 0; i < sim_input->num_categories; i++) {
         linked_websites[i] = NULL;
     }
 
     /* Insert a website node for each website in the website array */
-    for (i = 0; i < sim_input->num_websites; i++) {
+    for (int i = 0; i < sim_input->num_websites; i++) {
         insert_website_node(linked_websites, &websites[i]);
     }
 
@@ -190,9 +188,8 @@ WebsiteNode *find_node_index(WebsiteNode **linked_websites, Website *website) {
 */
 
 void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
-    int i;
 
-    for (i = 0; i < num_categories; i++)
+    for (int i = 0; i < num_categories; i++)
     {
         WebsiteNode *current_node = linked_websites[i];
 
@@ -211,7 +208,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     short current_day, user_index;
 
     /* Simulation input constants */
-    const short NUM_USERS = simulation_input->num_users;
+    const int NUM_USERS = simulation_input->num_users;
     const short SIM_DURATION_DAYS = simulation_input->sim_duration_days;
     const short NUM_WEBSITES = simulation_input->num_websites;
     const short NUM_CATEGORIES = simulation_input->num_categories;
@@ -258,7 +255,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     return simulation_output;
 }
 
-void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, const short NUM_CATEGORIES, const short NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
+void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, const short NUM_CATEGORIES, const int NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
     short website_alt_index = 0;
 
     for (short category_index = ADULT; category_index < NUM_CATEGORIES; category_index++) {
@@ -314,11 +311,11 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
     }
 }
 
-void print_simulation_output(SimulationOutput *sim_outputs, unsigned short num_simulations) {
+void print_simulation_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS) {
     
     /* Print smt about the simulation - Parameters */
 
-    for (int i = 0; i < num_simulations; i++) {
+    for (int i = 0; i < NUM_SIMULATIONS; i++) {
         printf("%.2f\n", sim_outputs[i].total_pages); 
     }
 
