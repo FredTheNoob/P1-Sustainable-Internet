@@ -12,8 +12,11 @@
  */
 
 #include "lib/simulation.h"
+#include <time.h>
 
 int main(void) {
+    clock_t start_t, end_t;
+    
     /* Seed random generator */
     srand(time(NULL));
 
@@ -34,17 +37,19 @@ int main(void) {
     /* Array of all simulation outputs */
     SimulationOutput sim_outputs[sim_input.num_simulations];
 
+
+    start_t = clock();
     /* Run all simulations */
     for (int i = 0; i < sim_input.num_simulations; i++) {
         
         sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
     }
+    end_t = clock();
 
-
-    // print_linked_websites(linked_websites, sim_input.num_categories);
+    //print_linked_websites(linked_websites, sim_input.num_categories);
     print_sim_output(sim_outputs, sim_input.num_simulations);
 
-    printf("Reached end of program\n");
+    printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);
 
     return EXIT_SUCCESS;
 }
