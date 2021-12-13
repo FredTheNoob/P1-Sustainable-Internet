@@ -131,25 +131,25 @@ void insert_website_node(WebsiteNode **linked_websites, Website *website) {
     else {
         while (current_node != NULL && current_node->website->pages_per_minute > website->pages_per_minute) {
             previous_node = current_node;
-            current_node = current_node->more_sustainable_website;
+            current_node = current_node->next;
         }
 
         new_node = alloc_website_node(website);
 
         /* Insert at the start of the list */
         if (previous_node == NULL) {
-            new_node->more_sustainable_website = current_node;
+            new_node->next = current_node;
             linked_websites[website->category] = new_node;
         }
         /* Insert at the end of the list */
         else if (current_node == NULL) {
-            previous_node->more_sustainable_website = new_node;
+            previous_node->next = new_node;
 
         }
         /* Insert in between */
         else {
-            previous_node->more_sustainable_website = new_node;
-            new_node->more_sustainable_website = current_node;
+            previous_node->next = new_node;
+            new_node->next = current_node;
         }
     }
 } 
@@ -163,29 +163,10 @@ WebsiteNode *alloc_website_node(Website *website) {
     }
 
     new_website_node->website = website;
-    new_website_node->more_sustainable_website = NULL;
+    new_website_node->next = NULL;
 
     return new_website_node;
 }
-
-/*
-WebsiteNode *find_node_index(WebsiteNode **linked_websites, Website *website) {
-    WebsiteNode *website_node;
-    WebsiteNode *tmp_node;
-    
-    while (linked_websites[website->category]->website != NULL){
-        
-        tmp_node = linked_websites[website->category];
-        if(linked_websites[website->category]->website->pages_per_minute < website->pages_per_minute && linked_websites[website->category]->more_sustainable_website != NULL) {
-            return tmp_node;
-        }
-        
-        
-    }
-    
-    return website_node;        
-}
-*/
 
 void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
 
@@ -196,7 +177,7 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
         printf("%d ", i);
         while (current_node != NULL) {
             printf("%.3f ", current_node->website->pages_per_minute);
-            current_node = current_node->more_sustainable_website;
+            current_node = current_node->next;
         }
         printf("\n");
     }
@@ -265,14 +246,14 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
         /* Calculate number of websites in category */
         while (current_node != NULL) {
             num_websites_in_category++;
-            current_node = current_node->more_sustainable_website;
+            current_node = current_node->next;
         }
 
         /* Reset current_node */
         current_node = linked_websites[category_index];
 
         /* Generate matrix for each website - except the last in each category */
-        while (current_node->more_sustainable_website != NULL) {
+        while (current_node->next != NULL) {
 
             WebsiteAlternative* website_alternative = (WebsiteAlternative*) malloc(sizeof(WebsiteAlternative));
 
@@ -300,7 +281,7 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
             /* Increment values */
             website_index++;
             website_alt_index++;
-            current_node = current_node->more_sustainable_website;
+            current_node = current_node->next;
         }
     }
     if (website_alt_index != NUM_WEBSITE_ALTERNATIVES) {
