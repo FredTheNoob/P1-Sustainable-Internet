@@ -306,17 +306,40 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
     }
 }
 
-void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS) {
-    
+void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE) {
+    FILE *fp;
+    char file_name[MAX_FILE_NAME_LEN] = "output/output_";
     /* Print smt about the simulation - Parameters */
 
+    create_file_name(file_name, SUSTAINABLE_CHOICE);
+
+    fp = fopen(file_name,"w");
+
+    if (!fp) {
+        printf("[ERROR] Unable to write to output file: %s\n\n", file_name);
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(fp, "SUSTAINABLE CHOICE = %.2f\nSIMULATION;TOTAL_PAGES\n", SUSTAINABLE_CHOICE);
+
     for (int i = 0; i < NUM_SIMULATIONS; i++) {
+        fprintf(fp, "%d;%.2f\n", i+1, sim_outputs[i].total_pages);
         printf("%.2f\n", sim_outputs[i].total_pages); 
     }
+
+    fclose(fp);
 
     /* Eventually print what websites were accessed the most? - So in terms of clicks */
     /* Categorys for websites */
     /* Score based on how long the user spends on a website and how many clicks are used */
+}
+
+void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOICE) {
+    char sus_choice[20];
+
+    sprintf(sus_choice, "%.2f", SUSTAINABLE_CHOICE);
+    strcat(file_name, sus_choice);
+    strcat(file_name, ".csv");
 }
 
 /* Check if a key is valid */
