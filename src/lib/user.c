@@ -26,7 +26,10 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
             website = get_website(websites, NUM_WEBSITES, user->current_website->id); /* Returns a new website */
         }
 
-        /* Find out if it is possible to recommend a website to the user, which the user has not  */
+        /* Find out if it is possible to recommend a website to the user, which is 
+        more sustainable than the most sustainable website that the user has already
+        accepted as an alternative to this specific website */
+        /* FUNCTION CALL */
 
             
         /* Recommend a more sustainable website based on the initial website */
