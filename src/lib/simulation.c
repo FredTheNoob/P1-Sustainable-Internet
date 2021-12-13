@@ -252,7 +252,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
             short num_y = NUM_USERS;
 
             short *matrix = (short*) malloc(sizeof(short) * num_x * num_y);
-            short matrix_index;
+            int matrix_index;
             for (int y = 0; y < num_y; y++) {
                 for (int x = 0; x < num_x; x++) {
                     matrix_index = x + y * num_x;
