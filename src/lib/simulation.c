@@ -59,8 +59,9 @@ SimulationInput get_sim_input() {
 /* Generate user data for the given number of users (from the simulation input file) */
 void generate_users(User *users, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_users; i++) {
+        users[i].id = i;
         users[i].total_daily_time = 0;
-        users[i].max_daily_time = sim_input->avg_user_time; /* ----- generate "random" avg_user_time ----- */
+        users[i].max_daily_time = sim_input->avg_user_time;
         users[i].total_pages = 0;
         users[i].current_website = NULL;
     }
@@ -186,7 +187,6 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
 
 SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites) {
     SimulationOutput simulation_output;
-    short current_day, user_index;
 
     /* Simulation input constants */
     const int NUM_USERS = sim_input->num_users;
@@ -204,11 +204,10 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
     generate_recommendation_data(linked_websites, NUM_CATEGORIES);
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
-    for (current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
-
+    for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
+        
         /* loop through all users and call handle_user function */
-        for (user_index = 0; user_index < NUM_USERS; user_index++) {
-
+        for (int user_index = 0; user_index < NUM_USERS; user_index++) {
             handle_user(&users[user_index], websites, linked_websites, NUM_WEBSITES, NUM_CATEGORIES, SUSTAINABLE_CHOICE);
         }
 

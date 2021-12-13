@@ -6,8 +6,9 @@
 #include "website.h"
 
 struct User {
-    unsigned int total_daily_time;
-    unsigned int max_daily_time;
+    int id;
+    short total_daily_time;
+    short max_daily_time;
     float total_pages;
     Website *current_website;
 };

@@ -74,6 +74,8 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
 Website *choose_website(Website *website, Website *sustainable_website, const float SUSTAINABLE_CHOICE) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
+
+    /* Update  */
     
     return rand_0_1 < SUSTAINABLE_CHOICE ? sustainable_website : website;
 }
