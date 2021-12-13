@@ -200,9 +200,6 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
     /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
     generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
-    /* Generate initial recommendation data */
-    generate_recommendation_data(linked_websites, NUM_CATEGORIES);
-
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
     for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
         
@@ -231,6 +228,7 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
 
 void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES, const int NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
     short website_alt_index = 0;
+    double rand_0_1;
 
     for (short category_index = ADULT; category_index < NUM_CATEGORIES; category_index++) {
         WebsiteNode *current_node = linked_websites[category_index];
@@ -258,7 +256,23 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
             for (int y = 0; y < num_y; y++) {
                 for (int x = 0; x < num_x; x++) {
                     matrix_index = x + y * num_x;
-                    matrix[matrix_index] = -1;
+                    rand_0_1 = (double)rand() / (double)RAND_MAX;
+
+                    /* 50% chance to make a choice */
+                    if (rand_0_1 < 0.5) {
+                        /* 25% chance to make a sustainable choice */
+                        if (rand_0_1 < 0.25) {
+                            matrix[matrix_index] = 1;
+                        }
+                        /* 25% chance to make a non-sustainable choice */
+                        else {
+                            matrix[matrix_index] = 0;
+                        }
+                    }
+                    /* User made no choice */
+                    else {
+                        matrix[matrix_index] = -1;
+                    }
                 }
             }
             
@@ -281,10 +295,6 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
     if (website_alt_index != NUM_WEBSITE_ALTERNATIVES) {
         printf("[ERROR] Number of website alternatives didn't add up (%d != %d)\n", website_alt_index, NUM_WEBSITE_ALTERNATIVES);
     }
-}
-
-void generate_recommendation_data(WebsiteNode **linked_websites, const short NUM_CATEGORIES) {
-    
 }
 
 void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS) {
