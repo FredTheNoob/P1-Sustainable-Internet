@@ -184,30 +184,24 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
     
 }
 
-SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, Website *websites, WebsiteNode **linked_websites) {
+SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website *websites, WebsiteNode **linked_websites) {
     SimulationOutput simulation_output;
     short current_day, user_index;
 
     /* Simulation input constants */
-    const int NUM_USERS = simulation_input->num_users;
-    const short SIM_DURATION_DAYS = simulation_input->sim_duration_days;
-    const short NUM_WEBSITES = simulation_input->num_websites;
-    const short NUM_CATEGORIES = simulation_input->num_categories;
-    const float SUSTAINABLE_CHOICE = simulation_input->sustainable_choice;
+    const int NUM_USERS = sim_input->num_users;
+    const short SIM_DURATION_DAYS = sim_input->sim_duration_days;
+    const short NUM_WEBSITES = sim_input->num_websites;
+    const short NUM_CATEGORIES = sim_input->num_categories;
+    const float SUSTAINABLE_CHOICE = sim_input->sustainable_choice;
 
     const short NUM_WEBSITE_ALTERNATIVES = NUM_WEBSITES - NUM_CATEGORIES;
 
+    /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
+    generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
-    WebsiteAlternative *website_matrices[NUM_WEBSITE_ALTERNATIVES];
-    generate_matrices(website_matrices, linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
-
-    /* TEST Print matrices */
-    // for (int i = 0; i < NUM_WEBSITE_ALTERNATIVES; i++) {
-
-    //     for (int j = 0; j < website_matrices[i]->num_x * website_matrices[i]->num_y; j++) {
-    //         printf("%d ", website_matrices[i]->matrix[j]);
-    //     }
-    // }
+    /* Generate initial recommendation data */
+    generate_recommendation_data(linked_websites, NUM_CATEGORIES);
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
     for (current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
@@ -236,7 +230,7 @@ SimulationOutput run_simulation(SimulationInput *simulation_input, User *users, 
     return simulation_output;
 }
 
-void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **linked_websites, const short NUM_CATEGORIES, const int NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
+void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES, const int NUM_USERS, const short NUM_WEBSITE_ALTERNATIVES) {
     short website_alt_index = 0;
 
     for (short category_index = ADULT; category_index < NUM_CATEGORIES; category_index++) {
@@ -261,9 +255,10 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
             short num_y = NUM_USERS;
 
             short *matrix = (short*) malloc(sizeof(short) * num_x * num_y);
+            short matrix_index;
             for (int y = 0; y < num_y; y++) {
                 for (int x = 0; x < num_x; x++) {
-                    short matrix_index = x + y * num_x;
+                    matrix_index = x + y * num_x;
                     matrix[matrix_index] = -1;
                 }
             }
@@ -289,7 +284,11 @@ void generate_matrices(WebsiteAlternative **website_matrices, WebsiteNode **link
     }
 }
 
-void print_simulation_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS) {
+void generate_recommendation_data(WebsiteNode **linked_websites, const short NUM_CATEGORIES) {
+    
+}
+
+void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS) {
     
     /* Print smt about the simulation - Parameters */
 
