@@ -165,7 +165,6 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     matrix = website->alternatives_matrix->matrix;
     num_alternatives_in_category = website->alternatives_matrix->num_x;
 
-    printf("%d\t%d\t%d\n", website->alternatives_matrix->num_x, website->alternatives_matrix->num_websites_in_category, website->category_index);
     num_websites_in_category = website->alternatives_matrix->num_websites_in_category;
 
     first_alternative_category_index = num_websites_in_category - num_alternatives_in_category;
