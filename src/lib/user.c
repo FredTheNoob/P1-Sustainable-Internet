@@ -33,15 +33,17 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
             /* Recommend a more sustainable website based on the initial website */
             sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
 
-            // printf("%p\t%d\n", sustainable_website, website->alternatives_matrix->num_x);
-
-            /* Logic to control which website to choose - the sustainable alternative or the initial website */
-            chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
-            
+            if (sustainable_website == website) {
+                chosen_website = website;
+            } else {
+                /* Logic to control which website to choose - the sustainable alternative or the initial website */
+                chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
+            }
         }
-
         /* Assign the chosen website to user */
         assign_website(user, chosen_website);
+
+        
 
         if (user->total_daily_time + user->current_website->avg_duration < user->max_daily_time) {
 
@@ -94,7 +96,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
             if (similar_user_index == user_index) {
                 continue;
             }
-            /* If both values are -1, skip to the next iteration in the for loop */
+            /* If both values are NULL, skip to the next iteration in the for loop */
             else if (alternative_matrix[similar_user_index + x] == NULL && alternative_matrix[user_index + x] == NULL) {
                 continue;
             }
@@ -157,21 +159,28 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
     Website *chosen_website = NULL;
-    // Website **matrix;
-    // short num_x;
+    Website **matrix;
+    short num_alternatives_in_category, num_websites_in_category, first_alternative_category_index, sus_website_index, matrix_index;
 
-    // matrix = sustainable_website->alternatives_matrix->matrix;
-    // num_x = sustainable_website->alternatives_matrix->num_x;
+    matrix = website->alternatives_matrix->matrix;
+    num_alternatives_in_category = website->alternatives_matrix->num_x;
 
+    printf("%d\t%d\t%d\n", website->alternatives_matrix->num_x, website->alternatives_matrix->num_websites_in_category, website->category_index);
+    num_websites_in_category = website->alternatives_matrix->num_websites_in_category;
 
+    first_alternative_category_index = num_websites_in_category - num_alternatives_in_category;
     
-    if (rand_0_1 < SUSTAINABLE_CHOICE) {
+    sus_website_index = sustainable_website->category_index - first_alternative_category_index;
 
+    matrix_index = sus_website_index + user_id * num_alternatives_in_category;
+
+    if (rand_0_1 < SUSTAINABLE_CHOICE) {
+        matrix[matrix_index] = sustainable_website;
         chosen_website = sustainable_website;
     } else {
-
+        matrix[matrix_index] = website;
         chosen_website = website;
     }
-    
-    return chosen_website;
+
+    return chosen_website != NULL ? chosen_website : website;
 }

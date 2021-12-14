@@ -83,6 +83,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_websites; i++) {
         
         websites[i].id = i;
+        websites[i].category_index = 0;
         fscanf(fp, " %hu,%f,%f,%[^\n] ", &websites[i].avg_duration, &websites[i].pages_per_visit, &websites[i].weight, category_buffer);
     
         /* Calculates the website's avg pages shown per minute */
@@ -108,6 +109,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
 
 WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
+    short category_index;
 
     /* Set all indexes to NULL */
     for (int i = 0; i < sim_input->num_categories; i++) {
@@ -117,6 +119,17 @@ WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     /* Insert a website node for each website in the website array */
     for (int i = 0; i < sim_input->num_websites; i++) {
         insert_website_node(linked_websites, &websites[i]);
+    }
+
+    /* Set category_index for all websites */
+    for (int i = 0; i < sim_input->num_categories; i++) {
+        WebsiteNode *current_website_node = linked_websites[i];
+        category_index = 0;
+        while (current_website_node != NULL) {
+            current_website_node->website->category_index = category_index;
+            category_index++;
+            current_website_node = current_website_node->next;
+        }
     }
 
     return linked_websites;
@@ -177,7 +190,8 @@ void print_linked_websites(WebsiteNode **linked_websites, int num_categories) {
 
         printf("%d ", i);
         while (current_node != NULL) {
-            printf("%.3f ", current_node->website->pages_per_minute);
+            // printf("%.3f ", current_node->website->pages_per_minute);
+            printf("%p ", current_node->website->alternatives_matrix);
             current_node = current_node->next;
         }
         printf("\n");
@@ -199,6 +213,17 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
 
     /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
     generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
+
+    // for(int i = 0; i < NUM_CATEGORIES; i++){
+    //     WebsiteNode *current_website_node = linked_websites[i];
+    //     while (current_website_node->next != NULL) {
+            
+    //         printf("num of websites in category: %d\n", current_website_node->website->alternatives_matrix->num_x);
+
+    //         current_website_node = current_website_node->next;
+    //     }
+    // }
+
 
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
     for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
@@ -230,8 +255,8 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
     short website_alt_index = 0;
     double rand_0_1;
 
-    for (short category_index = ADULT; category_index < NUM_CATEGORIES; category_index++) {
-        WebsiteNode *current_node = linked_websites[category_index];
+    for (int i = ADULT; i < NUM_CATEGORIES; i++) {
+        WebsiteNode *current_node = linked_websites[i];
         short num_websites_in_category = 0, website_index = 0;
 
         /* Calculate number of websites in category */
@@ -241,7 +266,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
         }
 
         /* Reset current_node */
-        current_node = linked_websites[category_index];
+        current_node = linked_websites[i];
 
         /* Generate matrix for each website - except the last in each category */
         while (current_node->next != NULL) {
@@ -286,6 +311,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
             /* Assign width and height to the WebsiteAlternative struct */
             website_alternative->num_x = num_x;
             website_alternative->num_y = num_y;
+            website_alternative->num_websites_in_category = num_websites_in_category;
 
             /* Assign generated matrix to website alternative */
             website_alternative->matrix = matrix;
@@ -313,9 +339,9 @@ void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS
 
     create_file_name(file_name, SUSTAINABLE_CHOICE);
 
-    fp = fopen(file_name,"w");
+    fp = fopen(file_name, "w");
 
-    if (!fp) {
+    if (fp == NULL) {
         printf("[ERROR] Unable to write to output file: %s\n\n", file_name);
         exit(EXIT_FAILURE);
     }

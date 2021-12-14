@@ -31,6 +31,7 @@ typedef enum WebsiteCategory WebsiteCategory;
 
 struct Website {
     short id;
+    short category_index;
     WebsiteCategory category;
     short avg_duration;
     float pages_per_visit;
@@ -50,6 +51,7 @@ struct WebsiteAlternative {
     Website **matrix;
     short num_x;
     short num_y;
+    short num_websites_in_category;
 };
 typedef struct WebsiteAlternative WebsiteAlternative;
 
