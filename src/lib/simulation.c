@@ -214,17 +214,6 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
     /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
     generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
-    // for(int i = 0; i < NUM_CATEGORIES; i++){
-    //     WebsiteNode *current_website_node = linked_websites[i];
-    //     while (current_website_node->next != NULL) {
-            
-    //         printf("num of websites in category: %d\n", current_website_node->website->alternatives_matrix->num_x);
-
-    //         current_website_node = current_website_node->next;
-    //     }
-    // }
-
-
     /* Main loop - keeps looping until current_day reaches sim_duration_days */
     for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
         

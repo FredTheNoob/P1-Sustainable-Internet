@@ -43,8 +43,6 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
         /* Assign the chosen website to user */
         assign_website(user, chosen_website);
 
-        
-
         if (user->total_daily_time + user->current_website->avg_duration < user->max_daily_time) {
 
             /* Increment user's total daily time spent on webbrowsing */
@@ -72,6 +70,7 @@ void assign_website(User *user, Website *chosen_website) {
     user->current_website = chosen_website;
 } 
 
+/* Return a website to recommend the user */
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES) {
     Website *recommended_website = NULL;
     int num_total_interactions, num_common_interactions;
@@ -149,7 +148,6 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
 
         compare_index--;
     }
-
     
     /* If no recommendation was found, return the current website */
     return recommended_website != NULL ? recommended_website : current_website;
@@ -161,25 +159,36 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     Website *chosen_website = NULL;
     Website **matrix;
     short num_alternatives_in_category, num_websites_in_category, first_alternative_category_index, sus_website_index, matrix_index;
+    short matrix_x, matrix_y, matrix_width;
 
+    /* Make shorter local variables */
     matrix = website->alternatives_matrix->matrix;
     num_alternatives_in_category = website->alternatives_matrix->num_x;
-
     num_websites_in_category = website->alternatives_matrix->num_websites_in_category;
 
+    /* Calculate category index of the first website in the matrix of alternatives */
     first_alternative_category_index = num_websites_in_category - num_alternatives_in_category;
     
+    /* Calculate the index (on the x-axis) that the sustainable website has in the matrix */
     sus_website_index = sustainable_website->category_index - first_alternative_category_index;
 
-    matrix_index = sus_website_index + user_id * num_alternatives_in_category;
+    /* Calculate the index (overall) that the sustainable website has in the matrix */
+    matrix_x = sus_website_index;
+    matrix_y = user_id;
+    matrix_width = num_alternatives_in_category;
 
+    matrix_index = matrix_x + matrix_y * matrix_width;
+
+    /* Check if the user should accept the sustainable website or not */
     if (rand_0_1 < SUSTAINABLE_CHOICE) {
+        /* Update the pointer in the matrix and choose the sustainable website */
         matrix[matrix_index] = sustainable_website;
         chosen_website = sustainable_website;
     } else {
+        /* Update the pointer in the matrix and choose the original website */
         matrix[matrix_index] = website;
         chosen_website = website;
     }
 
-    return chosen_website != NULL ? chosen_website : website;
+    return chosen_website;
 }
