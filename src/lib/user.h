@@ -5,6 +5,9 @@
 
 #include "website.h"
 
+#define NO_WEBSITE_ID -1
+#define NO_USER_ID -1
+
 struct User {
     int id;
     short total_daily_time;

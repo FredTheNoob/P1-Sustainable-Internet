@@ -1,7 +1,5 @@
 #include "user.h"
 
-#define NO_WEBSITE_ID -1
-
 void reset_users(User *users, const int NUM_USERS) {
     for (int i = 0; i < NUM_USERS; i++) {
         users[i].total_daily_time = 0;
@@ -76,35 +74,38 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
     int num_total_interactions, num_common_interactions;
     int user_index = user_id, similar_user_index;
 
-    int most_similar_user_id = -1;
+    int most_similar_user_id = NO_USER_ID;
     float most_similar_jaccard = 0, current_jaccard;
     
     /* Number of users and websites in the current website's matrix of alternative websites */
     int num_users = current_website->alternatives_matrix->num_y;
     int num_alternatives_in_category = current_website->alternatives_matrix->num_x;
 
-    Website **alternative_matrix = current_website->alternatives_matrix->matrix;
+    Website **matrix = current_website->alternatives_matrix->matrix;
 
+    /* Loop through all users in the matrix */
     for (int y = 0; y < num_users; y++) {
         /* (x) + y * width */
         similar_user_index = y * num_alternatives_in_category;
         num_common_interactions = 0;
         num_total_interactions = 0;
+
+        /* Loop through all websites for both the inputted user (user_id) and the 'y'th user */
         for (int x = 0; x < num_alternatives_in_category; x++) {
             /* Make sure that the user itself is skipped */
             if (similar_user_index == user_index) {
                 continue;
             }
             /* If both values are NULL, skip to the next iteration in the for loop */
-            else if (alternative_matrix[similar_user_index + x] == NULL && alternative_matrix[user_index + x] == NULL) {
+            else if (matrix[similar_user_index + x] == NULL && matrix[user_index + x] == NULL) {
                 continue;
             }
             /* Else if both values are the same, increment num_common_interactions */
-            else if (alternative_matrix[similar_user_index + x] == alternative_matrix[user_index + x]) {
+            else if (matrix[similar_user_index + x] == matrix[user_index + x]) {
                 num_common_interactions++;
             }
             /* If one of the values are not -1, increment num_total_interactions */
-            if (alternative_matrix[similar_user_index + x] != NULL || alternative_matrix[user_index + x] != NULL) {
+            if (matrix[similar_user_index + x] != NULL || matrix[user_index + x] != NULL) {
                 num_total_interactions++;
             }
         }
@@ -120,7 +121,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
 
     /* If most_similar_user_id hasn't been updated from -1, the algortithm hasn't 
     found proper recommendation - therefore return the current_website */
-    if (most_similar_user_id == -1) {
+    if (most_similar_user_id == NO_USER_ID) {
         return current_website;
     }
 
@@ -133,16 +134,16 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
     while (compare_index >= 0 && !found_alternative) {
 
         /* If the user has accepted a more sustainable website than the similar user can recommend, just choose that website */
-        if (alternative_matrix[user_index + compare_index] != NULL && alternative_matrix[user_index + compare_index] != current_website) {
-            recommended_website = alternative_matrix[user_index + compare_index];
+        if (matrix[user_index + compare_index] != NULL && matrix[user_index + compare_index] != current_website) {
+            recommended_website = matrix[user_index + compare_index];
             found_alternative = true;
         }
         /* If the similar user has accepted a website that the user hasn't interacted with yet, recommend that website */
-        else if (alternative_matrix[similar_user_index + compare_index] != NULL && 
-                 alternative_matrix[similar_user_index + compare_index] != current_website && 
-                 alternative_matrix[user_index + compare_index] == NULL) {
+        else if (matrix[similar_user_index + compare_index] != NULL && 
+                 matrix[similar_user_index + compare_index] != current_website && 
+                 matrix[user_index + compare_index] == NULL) {
             
-            recommended_website = alternative_matrix[similar_user_index + compare_index];
+            recommended_website = matrix[similar_user_index + compare_index];
             found_alternative = true;
         }
 
