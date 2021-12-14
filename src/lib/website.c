@@ -12,8 +12,12 @@ Website *get_website(Website *websites, const short NUM_WEBSITES, short previous
         i++;
     }
 
+    /* If we have no previous id */
+    if (previous_website_id == -1) {
+        return &websites[i - 1];
+    }
     /* If i is not the previous id */
-    if (i != previous_website_id) { 
+    else if (i != previous_website_id) { 
         return &websites[i];
     }
     /* If i is not the last index */
