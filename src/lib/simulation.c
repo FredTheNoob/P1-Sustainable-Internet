@@ -60,13 +60,14 @@ SimulationInput get_sim_input() {
 void generate_users(User *users, SimulationInput *sim_input) {
     for (int i = 0; i < sim_input->num_users; i++) {
         users[i].id = i;
-        users[i].total_daily_time = 0;
+        users[i].daily_time_spent = 0;
         users[i].max_daily_time = sim_input->avg_user_time;
         users[i].total_pages = 0;
         users[i].current_website = NULL;
     }
 }
 
+/* Load website data from csv file into array of website structs */
 void load_websites(Website *websites, SimulationInput *sim_input) {
     FILE *fp = fopen("input/websites_data.csv", "r");
     char category_buffer[BUFFER_SIZE];
@@ -107,6 +108,7 @@ void load_websites(Website *websites, SimulationInput *sim_input) {
     }
 }
 
+/* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
 WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
     WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * sim_input->num_categories);
     short category_index;
@@ -121,7 +123,7 @@ WebsiteNode **convert_websites(Website *websites, SimulationInput *sim_input) {
         insert_website_node(linked_websites, &websites[i]);
     }
 
-    /* Set category_index for all websites */
+    /* Loop through linked_websites and set category_index for all websites */
     for (int i = 0; i < sim_input->num_categories; i++) {
         WebsiteNode *current_website_node = linked_websites[i];
         category_index = 0;
@@ -214,15 +216,13 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
     /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
     generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
-    /* Main loop - keeps looping until current_day reaches sim_duration_days */
+    /* Loop through all days in simulation */
     for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
         
-        /* loop through all users and call handle_user function */
+        /* Loop through all users */
         for (int user_index = 0; user_index < NUM_USERS; user_index++) {
             handle_user(&users[user_index], websites, linked_websites, NUM_WEBSITES, NUM_CATEGORIES, SUSTAINABLE_CHOICE);
         }
-
-        /* Handle output before resetting users */
 
         /* Resets all users */
         reset_users(users, NUM_USERS);
@@ -244,6 +244,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
     short website_alt_index = 0;
     double rand_0_1;
 
+    /* Loop through linked_websites */
     for (int i = ADULT; i < NUM_CATEGORIES; i++) {
         WebsiteNode *current_node = linked_websites[i];
         short num_websites_in_category = 0, website_index = 0;
@@ -262,35 +263,38 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
 
             WebsiteAlternative* website_alternative = (WebsiteAlternative*) malloc(sizeof(WebsiteAlternative));
 
+            /* Calculates the width and height of the matrix */
             short num_x = (num_websites_in_category - 1) - website_index;
             short num_y = NUM_USERS;
 
             Website **matrix = (Website**) malloc(sizeof(Website*) * num_x * num_y);
             int matrix_index;
+
+            /* Loop through the matrix of the current website */
             for (int y = 0; y < num_y; y++) {
                 for (int x = 0; x < num_x; x++) {
                     matrix_index = x + y * num_x;
                     rand_0_1 = (double)rand() / (double)RAND_MAX;
 
-                    /* 50% chance to make a choice */
+                    /* 50% chance user has made a choice */
                     if (rand_0_1 < 0.5) {
-                        /* 25% chance to make a sustainable choice */
+                        /* 25% chance user made a sustainable choice */
                         if (rand_0_1 < 0.25) {
                             WebsiteNode *temp_current_node = current_node->next;
                             short temp_index = 0;
-                            /* Make sure the right website pointer is assigned to the corresponding x value in the matrix */
+                            /* Makes sure the right website pointer is assigned to the corresponding x value in the matrix */
                             while (temp_index < x) {
                                 temp_index++;
                                 temp_current_node = temp_current_node->next;
                             }
                             matrix[matrix_index] = temp_current_node->website;
                         }
-                        /* 25% chance to make a non-sustainable choice */
+                        /* 25% chance user has made a non-sustainable choice */
                         else {
                             matrix[matrix_index] = current_node->website;
                         }
                     }
-                    /* User made no choice */
+                    /* User has made no choice */
                     else {
                         matrix[matrix_index] = NULL;
                     }
@@ -321,22 +325,22 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
     }
 }
 
-void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE) {
+/* Write simulation output to file */
+void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE) {
     FILE *fp;
     char file_name[MAX_FILE_NAME_LEN] = "output/output_";
-    /* Print smt about the simulation - Parameters */
 
+    /* Create file name based on the value of SUSTAINABLE_CHOICE */
     create_file_name(file_name, SUSTAINABLE_CHOICE);
 
     fp = fopen(file_name, "w");
-
     if (fp == NULL) {
         printf("[ERROR] Unable to write to output file: %s\n\n", file_name);
         exit(EXIT_FAILURE);
     }
 
+    /* Write output for all simulations */
     fprintf(fp, "SUSTAINABLE CHOICE = %.2f\nSIMULATION;TOTAL_PAGES\n", SUSTAINABLE_CHOICE);
-
     for (int i = 0; i < NUM_SIMULATIONS; i++) {
         fprintf(fp, "%d;%.2f\n", i+1, sim_outputs[i].total_pages);
         printf("%.2f\n", sim_outputs[i].total_pages); 
@@ -349,6 +353,7 @@ void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS
     /* Score based on how long the user spends on a website and how many clicks are used */
 }
 
+/* Create file name based on the value of SUSTAINABLE_CHOICE */
 void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOICE) {
     char sus_choice[20];
 

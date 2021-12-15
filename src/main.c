@@ -23,6 +23,9 @@ int main(void) {
     /* Simulation input */
     SimulationInput sim_input = get_sim_input();
 
+    /* Declare array of all simulation outputs */
+    SimulationOutput sim_outputs[sim_input.num_simulations];
+
     /* Create array of users */
     User users[sim_input.num_users];
     generate_users(users, &sim_input);
@@ -34,20 +37,19 @@ int main(void) {
     /* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
     WebsiteNode **linked_websites = convert_websites(websites, &sim_input);
 
-    /* Array of all simulation outputs */
-    SimulationOutput sim_outputs[sim_input.num_simulations];
+    start_t = clock(); /* Start the timer */
 
-    start_t = clock();
     /* Run all simulations */
     for (int i = 0; i < sim_input.num_simulations; i++) {
         
         sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
     }
-    end_t = clock();
 
-    print_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
+    end_t = clock(); /* Stop the timer */
 
+    /* Write simulation output to file */
+    write_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
     printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);
-
+    
     return EXIT_SUCCESS;
 }
