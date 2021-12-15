@@ -1,5 +1,6 @@
 #include "website.h"
 
+/* Returns a website based on weighted probability and the previous website's id (if any) */
 Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;

@@ -1,13 +1,14 @@
 #include "user.h"
 
+/* Reset users */
 void reset_users(User *users, const int NUM_USERS) {
     for (int i = 0; i < NUM_USERS; i++) {
-        users[i].total_daily_time = 0;
+        users[i].daily_time_spent = 0;
         users[i].current_website = NULL;
     }
 }
 
-/* Logic to conrol whether a user should be assigned a new website */
+/* Simulates a users behaviour throughout one day */
 void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, const short NUM_WEBSITES, const short NUM_CATEGORIES, const float SUSTAINABLE_CHOICE) { 
     
     Website *website = NULL;
@@ -16,46 +17,53 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
 
     bool below_daily_time = true;
 
-    /* If user's daily time + their current website's avg duration doesn't exceed their max daily time */
+    /* Check if the user is below its max daily time */
     while (below_daily_time) {
         if (user->current_website == NULL) {
-            website = get_website(websites, NUM_WEBSITES, NO_WEBSITE_ID);
-        } else {
-            website = get_website(websites, NUM_WEBSITES, user->current_website->id); /* Returns a new website */
+            /* Returns the first website of the day */
+            website = get_website(websites, NUM_WEBSITES, NO_WEBSITE_ID); 
+        } 
+        else {
+            /* Returns a new website */
+            website = get_website(websites, NUM_WEBSITES, user->current_website->id); 
         }
 
         /* If the website's matrix == NULL it is the most sustainable website in the category */
         if (website->alternatives_matrix == NULL) {
             chosen_website = website;
-        } else {
-            /* Recommend a more sustainable website based on the initial website */
+        } 
+        else {
+            /* Recommend a more sustainable website based on the current website */
             sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
 
             if (sustainable_website == website) {
                 chosen_website = website;
-            } else {
-                /* Logic to control which website to choose - the sustainable alternative or the initial website */
+            } 
+            else {
+                /* Check which website to choose - the sustainable alternative or the current website */
                 chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
             }
         }
+
         /* Assign the chosen website to user */
         assign_website(user, chosen_website);
 
-        if (user->total_daily_time + user->current_website->avg_duration < user->max_daily_time) {
+        /* Check if the users max daily time is exceeded if the avg duration of the website is added */
+        if (user->daily_time_spent + user->current_website->avg_duration < user->max_daily_time) {
 
-            /* Increment user's total daily time spent on webbrowsing */
-            user->total_daily_time += user->current_website->avg_duration;
+            /* Increment user's daily time spent on webbrowsing */
+            user->daily_time_spent += user->current_website->avg_duration;
 
             /* Increment user's total pages downloaded during webbrowsing */
             user->total_pages += user->current_website->pages_per_visit;
-
-        } else {
+        } 
+        else {
             below_daily_time = false;
         }
     }
     
-    /* Calculates the remaining pages */
-    float remaining_pages = (float)(user->max_daily_time - user->total_daily_time) / 
+    /* Calculates the remaining pages and adds them to the user */
+    float remaining_pages = (float)(user->max_daily_time - user->daily_time_spent) / 
                             (float)(user->current_website->avg_duration * 
                             user->current_website->pages_per_visit); 
 
@@ -63,8 +71,7 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
 }
 
 /* Assign website to user */
-void assign_website(User *user, Website *chosen_website) {
-    /* Gets a single website from the website data and assigns it to the given user's current website */
+void assign_website(User *user, Website *chosen_website) {    
     user->current_website = chosen_website;
 } 
 
@@ -90,7 +97,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         num_common_interactions = 0;
         num_total_interactions = 0;
 
-        /* Loop through all websites for both the inputted user (user_id) and the 'y'th user */
+        /* Loop through all websites and compare the inputted user (user_id) and the 'y'th user */
         for (int x = 0; x < num_alternatives_in_category; x++) {
             /* Make sure that the user itself is skipped */
             if (similar_user_index == user_index) {
@@ -110,9 +117,10 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
             }
         }
         
-        /* Calculate similarity for user */
+        /* Calculate Jaccard similarity coefficient for current user */
         current_jaccard = num_total_interactions > 0 ? num_common_interactions / num_total_interactions : 0;
 
+        /* Replace most similar user if the similirarity is greater than the current most similar user */
         if (current_jaccard > most_similar_jaccard) {
             most_similar_user_id = y;
             most_similar_jaccard = current_jaccard;
@@ -125,12 +133,12 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         return current_website;
     }
 
-    /* Loop through the matrix at index 'user_id' and 'most_similar_user_id' and compare */
     short compare_index = num_alternatives_in_category - 1;
     bool found_alternative = false;
 
     similar_user_index = most_similar_user_id * num_alternatives_in_category;
 
+    /* Loop through the matrix at index 'user_id' and 'most_similar_user_id' and compare */
     while (compare_index >= 0 && !found_alternative) {
 
         /* If the user has accepted a more sustainable website than the similar user can recommend, just choose that website */
@@ -154,6 +162,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
     return recommended_website != NULL ? recommended_website : current_website;
 }
 
+/* Control which website to choose */
 Website *choose_website(Website *website, Website *sustainable_website, short user_id, const float SUSTAINABLE_CHOICE) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;

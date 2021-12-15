@@ -50,7 +50,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
 
 void print_sim_input(SimulationInput *sim_input);
 
-void print_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE);
+void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE);
 
 void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOICE);
 
