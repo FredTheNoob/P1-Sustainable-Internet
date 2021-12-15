@@ -13,7 +13,7 @@
 *.exp
 
 # Output
-output
+*output_*
 
 # Precompiled Headers
 *.gch
