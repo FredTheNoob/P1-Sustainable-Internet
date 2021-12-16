@@ -23,7 +23,10 @@ int main(void) {
     /* Simulation input */
     SimulationInput sim_input = get_sim_input();
 
-    for (int n = 0; n < NUM_FILES; n++) {
+    /* Calculate how many output files to make */
+    short num_files = (1 / sim_input.sustainable_choice_increment) + 1;
+
+    for (int n = 0; n < num_files; n++) {
 
         /* Declare array of all simulation outputs */
         SimulationOutput sim_outputs[sim_input.num_simulations];
@@ -41,22 +44,39 @@ int main(void) {
 
         start_t = clock(); /* Start the timer */
 
+        
+        
+        
+
         /* Run all simulations */
         for (int i = 0; i < sim_input.num_simulations; i++) {
             
             sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
+
+            printf("\n\nSUP BITCH\n\n");
+
+            for (int y = 0; y < 20; y++) {
+                for (int x = 0; x < 4; x++) {
+                    printf("%-15p ", linked_websites[1]->website->alternatives_matrix->matrix[x + y * 4]);
+                }
+                printf("\n");
+            }
+
+            exit(EXIT_SUCCESS);
         }
+
+
 
         end_t = clock(); /* Stop the timer */
 
         /* Write simulation output to file */
         write_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
         
-        printf("Simulation no. %d / %d\tSUSTAINABLE_CHOICE = %.2f\n", n, NUM_FILES, sim_input.sustainable_choice);
-        sim_input.sustainable_choice += ((float)1 / (NUM_FILES - 1));
+        printf("Simulation no. %d / %d\tSUSTAINABLE_CHOICE = %.2f\n", n + 1, num_files, sim_input.sustainable_choice);
+        sim_input.sustainable_choice += sim_input.sustainable_choice_increment;
     }
 
-    combine_output_files(sim_input.num_simulations);
+    combine_output_files(sim_input.num_simulations, num_files);
 
     printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);
     

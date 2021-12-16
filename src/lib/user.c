@@ -34,7 +34,7 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
         } 
         else {
             /* Recommend a more sustainable website based on the current website */
-            sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES);
+            sustainable_website = recommend_website(linked_websites, website, user->id, NUM_CATEGORIES, SUSTAINABLE_CHOICE);
 
             if (sustainable_website == website) {
                 chosen_website = website;
@@ -76,7 +76,7 @@ void assign_website(User *user, Website *chosen_website) {
 } 
 
 /* Return a website to recommend the user */
-Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES) {
+Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES, const float SUSTAINABLE_CHOICE) {
     Website *recommended_website = NULL;
     int num_total_interactions, num_common_interactions;
     int user_index = user_id, similar_user_index;
@@ -165,7 +165,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
 /* Control which website to choose */
 Website *choose_website(Website *website, Website *sustainable_website, short user_id, const float SUSTAINABLE_CHOICE) {
     /* Generate random number between 0 and 1 */
-    double rand_0_1 = (double)rand() / (double)RAND_MAX;
+    float rand_0_1 = (float)rand() / (float)RAND_MAX;
     Website *chosen_website = NULL;
     Website **matrix;
     short num_alternatives_in_category, num_websites_in_category, first_alternative_category_index, sus_website_index, matrix_index;
@@ -193,10 +193,12 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     if (rand_0_1 < SUSTAINABLE_CHOICE) {
         /* Update the pointer in the matrix and choose the sustainable website */
         matrix[matrix_index] = sustainable_website;
+        //matrix[matrix_index] = NULL;
         chosen_website = sustainable_website;
     } else {
         /* Update the pointer in the matrix and choose the original website */
         matrix[matrix_index] = website;
+        //matrix[matrix_index] = NULL;
         chosen_website = website;
     }
 

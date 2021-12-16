@@ -40,8 +40,8 @@ SimulationInput get_sim_input() {
         else if (check_key(key, "NUM_SIMULATIONS")) {
             sim_input.num_simulations = value;
         }
-        else if (check_key(key, "SUSTAINABLE_CHOICE")) {
-            sim_input.sustainable_choice = value;
+        else if (check_key(key, "SUSTAINABLE_CHOICE_INCREMENT")) {
+            sim_input.sustainable_choice_increment = value;
         }
         else {
             printf("[WARNING] %s: Invalid parameter detected in simulation_input.txt on line %d (%s). This parameter will be ignored\n\n", __FILE__, i + 1, key);
@@ -51,6 +51,8 @@ SimulationInput get_sim_input() {
     }
 
     fclose(fp);
+
+    sim_input.sustainable_choice = 0.0;
 
     /* Returning simulation input */
     return sim_input;
@@ -216,6 +218,13 @@ SimulationOutput run_simulation(SimulationInput *sim_input, User *users, Website
     /* Generate a matrix of alternative websites for each website and assign it to the corresponding website */
     generate_matrices(linked_websites, NUM_CATEGORIES, NUM_USERS, NUM_WEBSITE_ALTERNATIVES);
 
+    for (int y = 0; y < 20; y++) {
+        for (int x = 0; x < 10; x++) {
+            printf("%-15p ", linked_websites[11]->website->alternatives_matrix->matrix[x + y * 10]);
+        }
+        printf("\n");
+    }
+
     /* Loop through all days in simulation */
     for (int current_day = 0; current_day < SIM_DURATION_DAYS; current_day++) {
         
@@ -326,7 +335,7 @@ void generate_matrices(WebsiteNode **linked_websites, const short NUM_CATEGORIES
 }
 
 /* Write simulation output to file */
-void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, float SUSTAINABLE_CHOICE) {
+void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS, const short SIM_DURATION_DAYS, const float SUSTAINABLE_CHOICE) {
     FILE *fp;
     char file_name[MAX_FILE_NAME_LEN] = "output/output_";
 
@@ -354,7 +363,7 @@ void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS
 }
 
 /* Create file name based on the value of SUSTAINABLE_CHOICE */
-void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOICE) {
+void create_file_name(char file_name[MAX_FILE_NAME_LEN], const float SUSTAINABLE_CHOICE) {
     char sus_choice[20];
 
     sprintf(sus_choice, "%.2f", SUSTAINABLE_CHOICE);
@@ -363,16 +372,16 @@ void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOIC
 }
 
 /* Combine output files */
-void combine_output_files(short num_simulations) {
-    FILE *fps[NUM_FILES];
+void combine_output_files(short num_simulations, const short num_files) {
+    FILE *fps[num_files];
     FILE *out_fp;
     char file_name[MAX_FILE_NAME_LEN];
     float output_val;
     int clear_index;
 
     /* Open all files */
-    for (int i = 0; i < NUM_FILES; i++) {
-        sprintf(file_name, "output/output_%.2f.csv", (float)i / (NUM_FILES - 1));
+    for (int i = 0; i < num_files; i++) {
+        sprintf(file_name, "output/output_%.2f.csv", (float)i / (num_files - 1));
         FILE *fp = fopen(file_name, "r");
 
         if (fp == NULL) {
@@ -384,7 +393,7 @@ void combine_output_files(short num_simulations) {
     }
 
     /* Skip first two lines in all files */
-    for (int i = 0; i < NUM_FILES; i++) {
+    for (int i = 0; i < num_files; i++) {
         while (fgetc(fps[i]) != '\n');
         while (fgetc(fps[i]) != '\n');
     }
@@ -401,12 +410,12 @@ void combine_output_files(short num_simulations) {
     
     for (int i = 0; i < num_simulations; i++) {
         /* Skip index of all files */
-        for (int i = 0; i < NUM_FILES; i++) {
+        for (int i = 0; i < num_files; i++) {
             fscanf(fps[i], "%d;", &clear_index);
         }
         
         /* Put the next value from each file into the output file */
-        for (int j = 0; j < NUM_FILES; j++) {
+        for (int j = 0; j < num_files; j++) {
             fscanf(fps[j], "%f ;", &output_val);
 
             fprintf(out_fp, "%.2f;", output_val);
