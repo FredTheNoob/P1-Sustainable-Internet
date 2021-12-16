@@ -121,7 +121,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         current_jaccard = num_total_interactions > 0 ? num_common_interactions / num_total_interactions : 0;
 
         /* Replace most similar user if the similirarity is greater than the current most similar user */
-        if (current_jaccard > most_similar_jaccard) {
+        if (current_jaccard >= most_similar_jaccard) {
             most_similar_user_id = y;
             most_similar_jaccard = current_jaccard;
         }
@@ -173,7 +173,9 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
 
     /* Make shorter local variables */
     matrix = website->alternatives_matrix->matrix;
+
     num_alternatives_in_category = website->alternatives_matrix->num_x;
+    
     num_websites_in_category = website->alternatives_matrix->num_websites_in_category;
 
     /* Calculate category index of the first website in the matrix of alternatives */
@@ -190,15 +192,13 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     matrix_index = matrix_x + matrix_y * matrix_width;
 
     /* Check if the user should accept the sustainable website or not */
-    if (rand_0_1 < SUSTAINABLE_CHOICE) {
+    if (rand_0_1 < 1) {
         /* Update the pointer in the matrix and choose the sustainable website */
         matrix[matrix_index] = sustainable_website;
-        //matrix[matrix_index] = NULL;
         chosen_website = sustainable_website;
     } else {
         /* Update the pointer in the matrix and choose the original website */
         matrix[matrix_index] = website;
-        //matrix[matrix_index] = NULL;
         chosen_website = website;
     }
 

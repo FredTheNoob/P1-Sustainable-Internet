@@ -44,28 +44,11 @@ int main(void) {
 
         start_t = clock(); /* Start the timer */
 
-        
-        
-        
-
         /* Run all simulations */
         for (int i = 0; i < sim_input.num_simulations; i++) {
             
             sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
-
-            printf("\n\nSUP BITCH\n\n");
-
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 4; x++) {
-                    printf("%-15p ", linked_websites[1]->website->alternatives_matrix->matrix[x + y * 4]);
-                }
-                printf("\n");
-            }
-
-            exit(EXIT_SUCCESS);
         }
-
-
 
         end_t = clock(); /* Stop the timer */
 
