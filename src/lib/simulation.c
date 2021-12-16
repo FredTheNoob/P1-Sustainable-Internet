@@ -343,7 +343,7 @@ void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS
     fprintf(fp, "SUSTAINABLE CHOICE = %.2f\nSIMULATION;TOTAL_PAGES\n", SUSTAINABLE_CHOICE);
     for (int i = 0; i < NUM_SIMULATIONS; i++) {
         fprintf(fp, "%d;%.2f\n", i+1, sim_outputs[i].total_pages);
-        printf("%.2f\n", sim_outputs[i].total_pages); 
+        // printf("%.2f\n", sim_outputs[i].total_pages); 
     }
 
     fclose(fp);
@@ -360,6 +360,64 @@ void create_file_name(char file_name[MAX_FILE_NAME_LEN], float SUSTAINABLE_CHOIC
     sprintf(sus_choice, "%.2f", SUSTAINABLE_CHOICE);
     strcat(file_name, sus_choice);
     strcat(file_name, ".csv");
+}
+
+/* Combine output files */
+void combine_output_files(short num_simulations) {
+    FILE *fps[NUM_FILES];
+    FILE *out_fp;
+    char file_name[MAX_FILE_NAME_LEN];
+    float output_val;
+    int clear_index;
+
+    /* Open all files */
+    for (int i = 0; i < NUM_FILES; i++) {
+        sprintf(file_name, "output/output_%.2f.csv", (float)i / (NUM_FILES - 1));
+        FILE *fp = fopen(file_name, "r");
+
+        if (fp == NULL) {
+            printf("[ERROR] Failed to open file (combine_output_files)");
+            exit(1);
+        }
+
+        fps[i] = fp;
+    }
+
+    /* Skip first two lines in all files */
+    for (int i = 0; i < NUM_FILES; i++) {
+        while (fgetc(fps[i]) != '\n');
+        while (fgetc(fps[i]) != '\n');
+    }
+
+    
+    
+
+    /* print to output_all */
+    out_fp = fopen("output/output_all.csv", "w");
+    if (out_fp == NULL) {
+        printf("[ERROR] Failed to open file (combine_output_files)");
+        exit(1);
+    }
+    
+    for (int i = 0; i < num_simulations; i++) {
+        /* Skip index of all files */
+        for (int i = 0; i < NUM_FILES; i++) {
+            fscanf(fps[i], "%d;", &clear_index);
+        }
+        
+        /* Put the next value from each file into the output file */
+        for (int j = 0; j < NUM_FILES; j++) {
+            fscanf(fps[j], "%f ;", &output_val);
+
+            fprintf(out_fp, "%.2f;", output_val);
+        }
+        
+        fprintf(out_fp, "\n");
+    }
+
+
+
+    /* close all files */
 }
 
 /* Check if a key is valid */

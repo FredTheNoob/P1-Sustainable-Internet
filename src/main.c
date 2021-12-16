@@ -23,32 +23,41 @@ int main(void) {
     /* Simulation input */
     SimulationInput sim_input = get_sim_input();
 
-    /* Declare array of all simulation outputs */
-    SimulationOutput sim_outputs[sim_input.num_simulations];
+    for (int n = 0; n < NUM_FILES; n++) {
 
-    /* Create array of users */
-    User users[sim_input.num_users];
-    generate_users(users, &sim_input);
+        /* Declare array of all simulation outputs */
+        SimulationOutput sim_outputs[sim_input.num_simulations];
 
-    /* Create array of websites */
-    Website websites[sim_input.num_websites];
-    load_websites(websites, &sim_input);
+        /* Create array of users */
+        User users[sim_input.num_users];
+        generate_users(users, &sim_input);
 
-    /* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
-    WebsiteNode **linked_websites = convert_websites(websites, &sim_input);
+        /* Create array of websites */
+        Website websites[sim_input.num_websites];
+        load_websites(websites, &sim_input);
 
-    start_t = clock(); /* Start the timer */
+        /* Convert array of websites to array of linked lists (sorted by pages_per_minute) */
+        WebsiteNode **linked_websites = convert_websites(websites, &sim_input);
 
-    /* Run all simulations */
-    for (int i = 0; i < sim_input.num_simulations; i++) {
+        start_t = clock(); /* Start the timer */
+
+        /* Run all simulations */
+        for (int i = 0; i < sim_input.num_simulations; i++) {
+            
+            sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
+        }
+
+        end_t = clock(); /* Stop the timer */
+
+        /* Write simulation output to file */
+        write_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
         
-        sim_outputs[i] = run_simulation(&sim_input, users, websites, linked_websites);
+        printf("Simulation no. %d / %d\tSUSTAINABLE_CHOICE = %.2f\n", n, NUM_FILES, sim_input.sustainable_choice);
+        sim_input.sustainable_choice += ((float)1 / (NUM_FILES - 1));
     }
 
-    end_t = clock(); /* Stop the timer */
+    combine_output_files(sim_input.num_simulations);
 
-    /* Write simulation output to file */
-    write_sim_output(sim_outputs, sim_input.num_simulations, sim_input.sim_duration_days, sim_input.sustainable_choice);
     printf("Reached end of program in %.3f seconds\n", (double)(end_t - start_t) / (double)CLOCKS_PER_SEC);
     
     return EXIT_SUCCESS;
