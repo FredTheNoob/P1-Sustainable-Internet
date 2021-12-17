@@ -1,10 +1,12 @@
 # P1-Sustainable-Internet
+
+![Screenshot 2021-12-17 173822](https://user-images.githubusercontent.com/43958385/146577960-cae66402-d76e-4548-ae63-1ac57582788f.png)
+
 A Discrete-Event-Simulation program written in C, that simulates a given number of users\
 and their internet activity on certain websites.\
 The users will get websites recommended based on a collaborative filtering recommendation system with sustainability in mind.\
 As the simulation progresses the chance of the user taking a more sustainable choice will increase.\
 The output will show the different simulation blocks with their respective sustainable choice value.
-
 
 ## About
 This project is a part of the P1 project on first semester (Software).
