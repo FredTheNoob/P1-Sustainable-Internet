@@ -13,17 +13,17 @@ Website *get_website(Website *websites, const short NUM_WEBSITES, short previous
         i++;
     }
 
+    
+    if (i == previous_website_id) {
+        return get_website(websites, NUM_WEBSITES, previous_website_id);
+    }
     /* If we have no previous id */
-    if (previous_website_id == -1) {
+    else if (previous_website_id == -1) {
         return &websites[i - 1];
     }
     /* If i is not the previous id */
     else if (i != previous_website_id) { 
         return &websites[i];
-    }
-    /* If i is not the last index */
-    else if (i != NUM_WEBSITES - 1) { 
-        return &websites[i + 1];
     }
     /* If i is the last index (very unlikely) */
     else if (i == NUM_WEBSITES - 1) { 
