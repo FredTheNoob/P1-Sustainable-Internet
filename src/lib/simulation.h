@@ -53,6 +53,8 @@ void create_file_name(char file_name[MAX_FILE_NAME_LEN], const float SUSTAINABLE
 
 void combine_output_files(short num_simulations, const short num_files);
 
+void free_all(WebsiteNode **linked_websites, short num_categories);
+
 int check_key(char *key, char *valid_key);
 
 void print_sim_input(SimulationInput *sim_input);

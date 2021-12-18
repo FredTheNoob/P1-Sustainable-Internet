@@ -345,14 +345,9 @@ void write_sim_output(SimulationOutput *sim_outputs, const short NUM_SIMULATIONS
     fprintf(fp, "SUSTAINABLE CHOICE = %.2f\nSIMULATION;TOTAL_PAGES\n", SUSTAINABLE_CHOICE);
     for (int i = 0; i < NUM_SIMULATIONS; i++) {
         fprintf(fp, "%d;%.2f\n", i+1, sim_outputs[i].total_pages);
-        // printf("%.2f\n", sim_outputs[i].total_pages); 
     }
 
     fclose(fp);
-
-    /* Eventually print what websites were accessed the most? - So in terms of clicks */
-    /* Categorys for websites */
-    /* Score based on how long the user spends on a website and how many clicks are used */
 }
 
 /* Create file name based on the value of SUSTAINABLE_CHOICE */
@@ -391,9 +386,6 @@ void combine_output_files(short num_simulations, const short num_files) {
         while (fgetc(fps[i]) != '\n');
     }
 
-    
-    
-
     /* print to output_all */
     out_fp = fopen("output/output_all.csv", "w");
     if (out_fp == NULL) {
@@ -417,9 +409,31 @@ void combine_output_files(short num_simulations, const short num_files) {
         fprintf(out_fp, "\n");
     }
 
-
-
     /* close all files */
+    for (int i = 0; i < num_files; i++) {
+        fclose(fps[i]);
+    }
+}
+
+void free_all(WebsiteNode **linked_websites, short num_categories) {
+    for (int i = 0; i < num_categories; i++) {
+        WebsiteNode *current_node = linked_websites[i];
+        WebsiteNode *temp_current_node;
+
+        while (current_node->next != NULL) {
+
+            temp_current_node = current_node;
+
+            current_node = current_node->next;
+
+            free(temp_current_node->website->alternatives_matrix->matrix);
+            free(temp_current_node->website->alternatives_matrix);
+            free(temp_current_node);
+        }
+        free(current_node); /* Free the last element in the linked list */
+    }
+    
+    free(linked_websites);
 }
 
 /* Check if a key is valid */

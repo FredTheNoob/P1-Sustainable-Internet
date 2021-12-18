@@ -59,6 +59,10 @@ int main(void) {
         
         printf("Simulation no. %d / %d   SUSTAINABLE_CHOICE = %.2f   Took %.3f s\n", n + 1, num_files, sim_input.sustainable_choice, (double)(curr_sim_end - curr_sim_start) / (double)CLOCKS_PER_SEC);
         sim_input.sustainable_choice += sim_input.sustainable_choice_increment;
+
+        /* Free matrices + WebsiteAlternatives + WebsiteNodes + linked_websites (array of pointers) */
+        /* Websites have not been allocated dynamically */
+        free_all(linked_websites, sim_input.num_categories);
     }
 
     total_sim_end = clock();

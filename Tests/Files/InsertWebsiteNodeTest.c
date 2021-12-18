@@ -12,6 +12,9 @@ void test_insert_website_node_end(CuTest *tc);
 Website *make_stub_website(int category, float pages_per_minute);
 WebsiteNode *get_node_at_index(WebsiteNode **linked_list, int index);
 
+void free_linked_websites(WebsiteNode **linked_websites);
+
+
 void test_insert_website_node_start(CuTest *tc) {
     WebsiteNode **linked_websites = (WebsiteNode**)malloc(sizeof(WebsiteNode*) * NUM_CATEGORIES);
 
@@ -24,6 +27,10 @@ void test_insert_website_node_start(CuTest *tc) {
     insert_website_node(linked_websites, make_stub_website(CURR_CATEGORY, inserted_val));
 
     CuAssertTrue(tc, linked_websites[CURR_CATEGORY]->website->pages_per_minute == inserted_val);
+
+    /* Free all WebsiteNodes and their Websites */
+    free_linked_websites(linked_websites);
+    
 }
 
 void test_insert_website_node_between(CuTest *tc) {
@@ -44,6 +51,9 @@ void test_insert_website_node_between(CuTest *tc) {
     WebsiteNode *found_node = get_node_at_index(linked_websites, expected_index);
 
     CuAssertTrue(tc, found_node->website->pages_per_minute == inserted_val);
+
+    /* Free all WebsiteNodes and their Websites */
+    free_linked_websites(linked_websites);
 }
 
 void test_insert_website_node_end(CuTest *tc) {
@@ -62,6 +72,10 @@ void test_insert_website_node_end(CuTest *tc) {
     WebsiteNode *found_node = get_node_at_index(linked_websites, expected_index);
 
     CuAssertTrue(tc, found_node->website->pages_per_minute == inserted_val);
+
+
+    /* Free all WebsiteNodes and their Websites */
+    free_linked_websites(linked_websites);
 }
 
 Website *make_stub_website(int category, float pages_per_minute) {
@@ -91,4 +105,20 @@ CuSuite* simGetSuite() {
     SUITE_ADD_TEST(suite, test_insert_website_node_end);
 
     return suite;
+}
+
+void free_linked_websites(WebsiteNode **linked_websites) {
+    
+    WebsiteNode *current_node = linked_websites[CURR_CATEGORY];
+    WebsiteNode *temp_current_node;
+
+    while (current_node != NULL) {
+
+        temp_current_node = current_node;
+
+        current_node = current_node->next;
+
+        free(temp_current_node->website);
+        free(temp_current_node);
+    }
 }
