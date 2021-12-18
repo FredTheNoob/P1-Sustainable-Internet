@@ -190,7 +190,8 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
         /* Update the pointer in the matrix and choose the sustainable website */
         matrix[matrix_index] = sustainable_website;
         chosen_website = sustainable_website;
-    } else {
+    } 
+    else {
         /* Update the pointer in the matrix and choose the original website */
         matrix[matrix_index] = website;
         chosen_website = website;
