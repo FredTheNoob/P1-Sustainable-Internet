@@ -55,10 +55,8 @@ struct WebsiteAlternative {
 };
 typedef struct WebsiteAlternative WebsiteAlternative;
 
-
+Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id);
 
 WebsiteCategory get_category(char *category);
-
-Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id);
 
 #endif

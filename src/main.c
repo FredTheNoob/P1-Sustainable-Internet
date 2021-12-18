@@ -65,7 +65,8 @@ int main(void) {
 
     combine_output_files(sim_input.num_simulations, num_files);
 
-    printf("Finished simulation in a total of %.3f seconds\n", (double)(total_sim_end - total_sim_start) / (double)CLOCKS_PER_SEC);
+    double total_sim_time = (double)(total_sim_end - total_sim_start) / (double)CLOCKS_PER_SEC;
+    printf("Finished simulation in a total of %.3f seconds (%.3f minutes)\n", total_sim_time, total_sim_time / 60);
     
     return EXIT_SUCCESS;
 }

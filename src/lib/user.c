@@ -127,12 +127,6 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         }
     }
 
-    /* If most_similar_user_id hasn't been updated from -1, the algortithm hasn't 
-    found proper recommendation - therefore return the current_website */
-    if (most_similar_user_id == NO_USER_ID) {
-        return current_website;
-    }
-
     short compare_index = num_alternatives_in_category - 1;
     bool found_alternative = false;
 
@@ -192,7 +186,7 @@ Website *choose_website(Website *website, Website *sustainable_website, short us
     matrix_index = matrix_x + matrix_y * matrix_width;
 
     /* Check if the user should accept the sustainable website or not */
-    if (rand_0_1 < 1) {
+    if (rand_0_1 < SUSTAINABLE_CHOICE) {
         /* Update the pointer in the matrix and choose the sustainable website */
         matrix[matrix_index] = sustainable_website;
         chosen_website = sustainable_website;
