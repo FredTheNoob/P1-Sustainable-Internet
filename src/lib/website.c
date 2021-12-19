@@ -4,12 +4,12 @@
 Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
-    double propabilities_sum = 0;
+    double probabilities_sum = 0;
     int i = 0;
 
     /* Iterates through websites until the sum exceeds the random number */
-    while (propabilities_sum < rand_0_1 && i < NUM_WEBSITES - 1) {
-        propabilities_sum += websites[i].weight;
+    while (probabilities_sum < rand_0_1 && i < NUM_WEBSITES - 1) {
+        probabilities_sum += websites[i].weight;
         i++;
     }
 
