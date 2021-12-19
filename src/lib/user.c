@@ -40,8 +40,25 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
                 chosen_website = website;
             } 
             else {
-                /* Check which website to choose - the sustainable alternative or the current website */
-                chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
+                /* Loop through all alternatives for the user and check 
+                if the recommended website has already been chosen */
+                Website **matrix = website->alternatives_matrix->matrix;
+                short num_x = website->alternatives_matrix->num_x;
+                int matrix_index = user->id * num_x, i = 0;
+                bool found_recommended_website = false;
+
+                while (!found_recommended_website && i < num_x) {
+                    if (matrix[matrix_index + i] == sustainable_website) {
+                        chosen_website = sustainable_website;
+                        found_recommended_website = true;
+                    }
+                    i++;
+                }
+
+                if (!found_recommended_website) {
+                    /* Check which website to choose - the sustainable alternative or the current website */
+                    chosen_website = choose_website(website, sustainable_website, user->id, SUSTAINABLE_CHOICE);
+                }   
             }
         }
 
