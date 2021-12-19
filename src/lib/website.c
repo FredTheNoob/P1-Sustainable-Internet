@@ -14,7 +14,7 @@ Website *get_website(Website *websites, const short NUM_WEBSITES, short previous
     }
 
     /* If i is not the previous id */
-    if (i != previous_website_id) { 
+    if (i - 1 != previous_website_id) { 
         return &websites[i - 1];
     }
     /* If i == previous id */
