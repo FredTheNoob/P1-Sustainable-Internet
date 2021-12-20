@@ -114,22 +114,25 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         num_common_interactions = 0;
         num_total_interactions = 0;
 
+        /* Make sure that the user itself is skipped */
+        if (similar_user_index == user_index) {
+            continue;
+        }
+
         /* Loop through all websites and compare the inputted user (user_id) and the 'y'th user */
         for (int x = 0; x < num_alternatives_in_category; x++) {
-            /* Make sure that the user itself is skipped */
-            if (similar_user_index == user_index) {
-                continue;
-            }
+            
             /* If both values are NULL, skip to the next iteration in the for loop */
-            else if (matrix[similar_user_index + x] == NULL && matrix[user_index + x] == NULL) {
+            if (matrix[similar_user_index + x] == NULL && matrix[user_index + x] == NULL) {
                 continue;
             }
             /* Else if both values are the same, increment num_common_interactions */
             else if (matrix[similar_user_index + x] == matrix[user_index + x]) {
                 num_common_interactions++;
+                num_total_interactions++;
             }
-            /* If one of the values are not -1, increment num_total_interactions */
-            if (matrix[similar_user_index + x] != NULL || matrix[user_index + x] != NULL) {
+            /* If one of the values are not NULL, increment num_total_interactions */
+            else {
                 num_total_interactions++;
             }
         }
