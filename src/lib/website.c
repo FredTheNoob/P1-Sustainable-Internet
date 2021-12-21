@@ -1,14 +1,14 @@
 #include "website.h"
 
 /* Returns a website based on weighted probability and the previous website's id (if any) */
-Website *get_website(Website *websites, const short NUM_WEBSITES, short previous_website_id) {
+Website *get_website(Website *websites, short previous_website_id) {
     /* Generate random number between 0 and 1 */
     double rand_0_1 = (double)rand() / (double)RAND_MAX;
     double probabilities_sum = 0;
     int i = 0;
 
     /* Iterates through websites until the sum exceeds the random number */
-    while (probabilities_sum < rand_0_1 && i < NUM_WEBSITES - 1) {
+    while (probabilities_sum < rand_0_1) {
         probabilities_sum += websites[i].weight;
         i++;
     }
@@ -19,7 +19,7 @@ Website *get_website(Website *websites, const short NUM_WEBSITES, short previous
     }
     /* If i == previous id */
     else {
-        return get_website(websites, NUM_WEBSITES, previous_website_id);
+        return get_website(websites, previous_website_id);
     }
 }
 

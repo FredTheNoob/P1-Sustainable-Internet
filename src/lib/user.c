@@ -21,11 +21,11 @@ void handle_user(User *user, Website *websites, WebsiteNode **linked_websites, c
     while (below_daily_time) {
         if (user->current_website == NULL) {
             /* Returns the first website of the day */
-            website = get_website(websites, NUM_WEBSITES, NO_WEBSITE_ID); 
+            website = get_website(websites, NO_WEBSITE_ID); 
         } 
         else {
             /* Returns a new website */
-            website = get_website(websites, NUM_WEBSITES, user->current_website->id); 
+            website = get_website(websites, user->current_website->id); 
         }
 
         /* If the website's matrix == NULL it is the most sustainable website in the category */
