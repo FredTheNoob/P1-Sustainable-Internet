@@ -177,7 +177,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
         }
         /* Create a fallback website in case no recommendation was found. 
         Recommend the most sustainable website that the user hasn't interacted with yet */
-        else if (matrix[user_index + compare_index] == NULL) {
+        else if (fallback_website != current_website && matrix[user_index + compare_index] == NULL) {
 
             WebsiteCategory website_category = current_website->category;
             WebsiteNode *current_node = linked_websites[website_category];
