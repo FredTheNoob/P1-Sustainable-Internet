@@ -94,9 +94,13 @@ void assign_website(User *user, Website *chosen_website) {
 
 /* Return a website to recommend the user */
 Website *recommend_website(WebsiteNode **linked_websites, Website *current_website, short user_id, const short NUM_CATEGORIES, const float SUSTAINABLE_CHOICE) {
+    
     Website *recommended_website = NULL;
+
+    Website *fallback_website = current_website;
+    short fallback_index, num_websites_in_category = current_website->alternatives_matrix->num_websites_in_category;
+
     int num_total_interactions, num_common_interactions;
-    int user_index = user_id, similar_user_index;
 
     int most_similar_user_id = NO_USER_ID;
     float most_similar_jaccard = 0, current_jaccard;
@@ -104,6 +108,9 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
     /* Number of users and websites in the current website's matrix of alternative websites */
     int num_users = current_website->alternatives_matrix->num_y;
     int num_alternatives_in_category = current_website->alternatives_matrix->num_x;
+
+    int user_index = user_id * num_alternatives_in_category;
+    int similar_user_index;
 
     Website **matrix = current_website->alternatives_matrix->matrix;
 
@@ -136,7 +143,7 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
                 num_total_interactions++;
             }
         }
-        
+
         /* Calculate Jaccard similarity coefficient for current user */
         current_jaccard = num_total_interactions > 0 ? num_common_interactions / num_total_interactions : 0;
 
@@ -168,12 +175,26 @@ Website *recommend_website(WebsiteNode **linked_websites, Website *current_websi
             recommended_website = matrix[similar_user_index + compare_index];
             found_alternative = true;
         }
+        /* Create a fallback website in case no recommendation was found. 
+        Recommend the most sustainable website that the user hasn't interacted with yet */
+        else if (matrix[user_index + compare_index] == NULL) {
+
+            WebsiteCategory website_category = current_website->category;
+            WebsiteNode *current_node = linked_websites[website_category];
+
+            fallback_index = num_websites_in_category - num_alternatives_in_category + compare_index;
+            
+            for (int i = 0; i < fallback_index; i++) {
+                current_node = current_node->next;    
+            }
+            fallback_website = current_node->website;
+        }
 
         compare_index--;
     }
     
-    /* If no recommendation was found, return the current website */
-    return recommended_website != NULL ? recommended_website : current_website;
+    /* If no recommendation was found, return the fallback website */
+    return recommended_website != NULL ? recommended_website : fallback_website;
 }
 
 /* Control which website to choose */
