@@ -11,7 +11,7 @@ The output will show the different simulation blocks with their respective susta
 ## About
 This project is a part of the P1 project on first semester (Software).
 
-Group: SW B222
+Group: SW B222 
 
 Made by: Ali, Viktor, Frederik, Thorbjørn, Jonas, Alexander
 
